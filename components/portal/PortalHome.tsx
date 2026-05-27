@@ -56,19 +56,19 @@ export function PortalHome() {
 
   const categories = useMemo(() => ["全部", ...data.categories.filter((item) => item.isActive).map((item) => item.name)], [data.categories]);
   const selectedEngine = data.searchEngines.find((engine) => engine.name === searchEngine) ?? data.searchEngines[0];
-  const contactLinks = useMemo(
+  const socialLinks = useMemo(
     () =>
       data.socials
         .filter((item) => item.isActive && hasUsableUrl(item.url))
-        .sort((a, b) => a.sortOrder - b.sortOrder)
-        .map((item) => ({
-          id: item.id,
-          label: item.label,
-          icon: item.icon,
-          hint: displayUrl(item.url),
-          url: item.url
-        })),
+        .sort((a, b) => a.sortOrder - b.sortOrder),
     [data.socials]
+  );
+  const featuredLinks = useMemo(
+    () =>
+      data.featuredLinks
+        .filter((item) => item.isActive && hasUsableUrl(item.url))
+        .sort((a, b) => a.sortOrder - b.sortOrder),
+    [data.featuredLinks]
   );
   const visibleLinks = data.links
     .filter((link) => link.isActive)
@@ -127,7 +127,7 @@ export function PortalHome() {
             </div>
 
             <div className="mb-10 grid w-full grid-cols-4 gap-3">
-              {contactLinks.map((social) => (
+              {socialLinks.map((social) => (
                 <a
                   key={social.id}
                   href={social.url}
@@ -145,7 +145,7 @@ export function PortalHome() {
             </div>
 
             <div className="mb-10 flex w-full flex-col gap-3">
-              {contactLinks.map((link) => (
+              {featuredLinks.map((link) => (
                 <a
                   key={link.id}
                   href={link.url}
