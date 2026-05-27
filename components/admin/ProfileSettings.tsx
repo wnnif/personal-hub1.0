@@ -64,7 +64,7 @@ export function ProfileSettings() {
           <img
             src={profile.avatarUrl}
             alt={profile.name}
-            className="h-24 w-24 rounded-3xl object-cover shadow-lg"
+            className="h-24 w-24 rounded-full object-cover shadow-lg"
             onError={(event) => {
               event.currentTarget.src = "/avatar.svg";
             }}
