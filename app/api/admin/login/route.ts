@@ -5,7 +5,7 @@ export async function POST(request: NextRequest) {
   const body = (await request.json()) as { email?: string; password?: string };
 
   if (!verifyAdminCredentials(body.email ?? "", body.password ?? "")) {
-    return NextResponse.json({ error: "邮箱或密码不正确" }, { status: 401 });
+    return NextResponse.json({ error: "账号或密码不正确" }, { status: 401 });
   }
 
   const response = NextResponse.json({ ok: true });

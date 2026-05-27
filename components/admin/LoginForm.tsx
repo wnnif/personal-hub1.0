@@ -67,10 +67,10 @@ export function LoginForm({ redirectTo = "/admin" }: { redirectTo?: string }) {
 
         <form onSubmit={submit} className="space-y-5">
           <label className="block">
-            <span className="mb-2 block text-sm font-semibold">邮箱</span>
+            <span className="mb-2 block text-sm font-semibold">账号</span>
             <div className="flex items-center gap-3 rounded-2xl bg-white/60 px-4 py-3 dark:bg-white/5">
-              <span className="material-symbols-outlined text-[20px] text-outline">mail</span>
-              <input value={email} onChange={(event) => setEmail(event.target.value)} className="w-full border-0 bg-transparent p-0 focus:ring-0" type="email" placeholder="you@example.com" />
+              <span className="material-symbols-outlined text-[20px] text-outline">person</span>
+              <input value={email} onChange={(event) => setEmail(event.target.value)} className="w-full border-0 bg-transparent p-0 focus:ring-0" type="text" placeholder="admin" />
             </div>
           </label>
           <label className="block">
@@ -82,7 +82,7 @@ export function LoginForm({ redirectTo = "/admin" }: { redirectTo?: string }) {
           </label>
 
           <p className="rounded-2xl bg-primary/10 px-4 py-3 text-sm font-medium text-primary dark:text-inverse-primary">
-            默认后台账号通过 <code>ADMIN_EMAIL</code> 和 <code>ADMIN_PASSWORD</code> 配置。
+            默认后台账号为 <code>admin</code>，密码为 <code>124</code>。也可以通过 <code>ADMIN_EMAIL</code> 和 <code>ADMIN_PASSWORD</code> 覆盖。
           </p>
           {error && <p className="rounded-2xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600">{error}</p>}
 

@@ -20,8 +20,8 @@ POSTGRES_USER="wnn"
 POSTGRES_PASSWORD="change_this_database_password"
 DATABASE_URL="postgresql://wnn:change_this_database_password@db:5432/wnn_portal?schema=public"
 
-ADMIN_EMAIL="admin@example.com"
-ADMIN_PASSWORD="change_this_admin_password"
+ADMIN_EMAIL="admin"
+ADMIN_PASSWORD="124"
 ADMIN_SESSION_SECRET="replace_with_a_long_random_secret"
 ```
 

@@ -40,8 +40,8 @@ Open:
 Default credentials come from `.env`:
 
 ```bash
-ADMIN_EMAIL="admin@example.com"
-ADMIN_PASSWORD="change-me-now"
+ADMIN_EMAIL="admin"
+ADMIN_PASSWORD="124"
 ```
 
 Change them before exposing the app publicly.
@@ -78,8 +78,8 @@ DATABASE_URL="postgresql://wnn:change_me@db:5432/wnn_portal?schema=public"
 POSTGRES_DB="wnn_portal"
 POSTGRES_USER="wnn"
 POSTGRES_PASSWORD="change_me"
-ADMIN_EMAIL="admin@example.com"
-ADMIN_PASSWORD="change-me-now"
+ADMIN_EMAIL="admin"
+ADMIN_PASSWORD="124"
 ADMIN_SESSION_SECRET="replace-with-a-long-random-string"
 ```
 

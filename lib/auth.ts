@@ -5,7 +5,7 @@ const COOKIE_NAME = "wnn_admin_session";
 const SESSION_TTL_SECONDS = 60 * 60 * 24 * 7;
 
 export function adminEmail() {
-  return process.env.ADMIN_EMAIL || "admin@example.com";
+  return process.env.ADMIN_EMAIL || "admin";
 }
 
 export function verifyAdminCredentials(email: string, password: string) {
@@ -18,7 +18,7 @@ export function verifyAdminCredentials(email: string, password: string) {
     return timingSafeEqual(sha256(password), passwordHash);
   }
 
-  const expectedPassword = process.env.ADMIN_PASSWORD || "change-me-now";
+  const expectedPassword = process.env.ADMIN_PASSWORD || "124";
   return timingSafeEqual(password, expectedPassword);
 }
 
