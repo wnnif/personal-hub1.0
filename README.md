@@ -1,5 +1,7 @@
 # Personal Hub 1.0
 
+English | [简体中文](./README.zh-CN.md)
+
 Personal Hub 1.0 is an open-source, self-hosted personal navigation site with a built-in admin console. It is designed for personal homepages, link hubs, developer portals, and lightweight start pages.
 
 The UI follows the Stitch Aura design package: Apple-like minimalism, glass surfaces, fluid backgrounds, and unified light/dark modes.
@@ -85,7 +87,7 @@ For production, use a strong `ADMIN_SESSION_SECRET` and a unique admin password.
 
 ## Deployment
 
-See [DEPLOYMENT.md](./DEPLOYMENT.md) for Docker, Docker Compose, Hermes, and Dok-style deployment notes.
+See [DEPLOYMENT.md](./DEPLOYMENT.md) for Docker, Docker Compose, Hermes, and Dok-style deployment notes. Chinese version: [DEPLOYMENT.zh-CN.md](./DEPLOYMENT.zh-CN.md).
 
 ## License
 

@@ -1,5 +1,7 @@
 # Deployment Guide
 
+English | [简体中文](./DEPLOYMENT.zh-CN.md)
+
 This project is designed for Docker-first deployment. The recommended production path is Docker Compose with one app container and one PostgreSQL container.
 
 ## 1. Prepare Environment
