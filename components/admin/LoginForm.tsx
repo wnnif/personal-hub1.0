@@ -38,7 +38,7 @@ export function LoginForm({ redirectTo = "/admin" }: { redirectTo?: string }) {
       return;
     }
 
-    router.push(redirectTo);
+    window.location.assign(redirectTo);
   }
 
   function toggleTheme() {

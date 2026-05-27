@@ -6,7 +6,7 @@ export async function GET(request: NextRequest) {
   const unauthorized = requireAdmin(request);
   if (unauthorized) return unauthorized;
 
-  const dailyVisits = await getVisitStats(14);
+  const dailyVisits = await getVisitStats(14).catch(() => []);
   return NextResponse.json({
     dailyVisits,
     todayVisitors: dailyVisits.at(-1)?.visitors ?? 0
