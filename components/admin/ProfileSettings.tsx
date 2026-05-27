@@ -47,8 +47,12 @@ export function ProfileSettings() {
 
     try {
       const result = await uploadAvatar(file);
-      setProfile((current) => ({ ...current, avatarUrl: result.url }));
-      setUploadMessage(`已上传到 ${result.path}`);
+      const nextProfile = { ...profile, avatarUrl: result.url };
+      setProfile(nextProfile);
+      await saveProfile(nextProfile, socials, syncedFeaturedLinks);
+      setSaved(true);
+      window.setTimeout(() => setSaved(false), 1800);
+      setUploadMessage(`已上传并保存到 ${result.path}`);
     } catch {
       setError("头像上传失败，请确认文件是 5MB 以内的图片。");
     } finally {
@@ -61,14 +65,16 @@ export function ProfileSettings() {
     <form onSubmit={submit} className="space-y-6">
       <section className="glass-card rounded-[2rem] p-6">
         <div className="mb-6 flex flex-col gap-5 md:flex-row md:items-center">
-          <img
-            src={profile.avatarUrl}
-            alt={profile.name}
-            className="h-24 w-24 rounded-full object-cover shadow-lg"
-            onError={(event) => {
-              event.currentTarget.src = "/avatar.svg";
-            }}
-          />
+          <div className="flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-full border-4 border-[#b7d4ff] bg-white/80 shadow-lg ring-8 ring-white/30 dark:border-inverse-primary/30 dark:bg-white/10 dark:ring-white/5">
+            <img
+              src={profile.avatarUrl}
+              alt={profile.name}
+              className="h-full w-full rounded-full object-cover"
+              onError={(event) => {
+                event.currentTarget.src = "/avatar.svg";
+              }}
+            />
+          </div>
           <div className="flex-1">
             <h2 className="text-2xl font-bold">身份信息</h2>
             <p className="text-sm text-outline">这些内容会显示在前台左侧个人信息卡里。</p>

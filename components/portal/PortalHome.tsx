@@ -108,11 +108,11 @@ export function PortalHome() {
       <div className="mx-auto flex max-w-[1400px] flex-col gap-16 px-5 pb-16 pt-24 md:px-12 lg:flex-row">
         <aside className="lg:w-80 lg:flex-shrink-0">
           <section className="glass-card sticky top-24 flex flex-col items-center rounded-[2rem] p-10 text-center transition duration-300 hover:-translate-y-1 hover:shadow-2xl lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto lg:items-start lg:text-left">
-            <div className="mb-6 h-32 w-32 overflow-hidden rounded-full border-4 border-primary-container/20 shadow-lg dark:border-inverse-primary/20">
+            <div className="mb-6 flex h-32 w-32 shrink-0 items-center justify-center overflow-hidden rounded-full border-4 border-[#b7d4ff] bg-white/80 shadow-lg ring-8 ring-white/30 dark:border-inverse-primary/30 dark:bg-white/10 dark:ring-white/5">
               <img
                 src={data.profile.avatarUrl}
                 alt={data.profile.name}
-                className="h-full w-full object-cover transition duration-500 hover:scale-110"
+                className="h-full w-full rounded-full object-cover transition duration-500 hover:scale-110"
                 onError={(event) => {
                   event.currentTarget.src = "/avatar.svg";
                 }}
