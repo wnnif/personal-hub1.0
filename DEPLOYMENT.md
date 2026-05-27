@@ -1,18 +1,18 @@
-# Deployment Guide
+# 部署指南
 
-English | [简体中文](./DEPLOYMENT.zh-CN.md)
+[English](./DEPLOYMENT.en.md) | 简体中文
 
-This project is designed for Docker-first deployment. The recommended production path is Docker Compose with one app container and one PostgreSQL container.
+本项目以 Docker 部署为优先目标。推荐生产环境使用 Docker Compose：一个应用容器加一个 PostgreSQL 容器。
 
-## 1. Prepare Environment
+## 1. 准备环境变量
 
-Copy the example file:
+复制示例配置：
 
 ```bash
 cp .env.example .env
 ```
 
-Edit `.env`:
+编辑 `.env`：
 
 ```bash
 POSTGRES_DB="wnn_portal"
@@ -25,109 +25,109 @@ ADMIN_PASSWORD="change_this_admin_password"
 ADMIN_SESSION_SECRET="replace_with_a_long_random_secret"
 ```
 
-Important:
+注意：
 
-- `POSTGRES_PASSWORD` and the password inside `DATABASE_URL` must match.
-- Change `ADMIN_PASSWORD` before exposing the app to the internet.
-- Use a long random value for `ADMIN_SESSION_SECRET`.
+- `POSTGRES_PASSWORD` 必须和 `DATABASE_URL` 里的数据库密码一致。
+- 公开到互联网前一定要修改 `ADMIN_PASSWORD`。
+- `ADMIN_SESSION_SECRET` 请使用足够长的随机字符串。
 
-## 2. Deploy With Docker Compose
+## 2. 使用 Docker Compose 部署
 
 ```bash
 docker compose up -d --build
 ```
 
-Open:
+打开：
 
 ```txt
-http://SERVER_IP:3000
-http://SERVER_IP:3000/admin
+http://服务器IP:3000
+http://服务器IP:3000/admin
 ```
 
-The app container runs these automatically during startup:
+应用容器启动时会自动执行：
 
 ```bash
 npx prisma migrate deploy
 npx prisma db seed
 ```
 
-The seed script is idempotent. It inserts initial content only when the database has not been initialized.
+种子脚本是幂等的：数据库已经初始化后，不会重复覆盖已有内容。
 
-## 3. Useful Commands
+## 3. 常用命令
 
-View logs:
+查看日志：
 
 ```bash
 docker compose logs -f app
 ```
 
-Restart:
+重启应用：
 
 ```bash
 docker compose restart app
 ```
 
-Rebuild after pulling updates:
+拉取更新后重新构建：
 
 ```bash
 git pull
 docker compose up -d --build
 ```
 
-Stop:
+停止服务：
 
 ```bash
 docker compose down
 ```
 
-Stop and remove database data:
+停止服务并删除数据库数据卷：
 
 ```bash
 docker compose down -v
 ```
 
-## 4. Hermes / Dok Docker Compose Deployment
+## 4. Hermes / Dok Docker Compose 部署
 
-Dok deployment uses Docker Compose. If your server panel can deploy from a Git repository with Docker Compose:
+Dok 使用 Docker Compose 部署。如果你的服务器面板支持从 Git 仓库使用 Docker Compose 部署：
 
-1. Create a new app from the Git repository.
-2. Select Docker Compose deployment.
-3. Use `docker-compose.yml` at the repository root.
-4. Add the environment variables from `.env.example`.
-5. Expose container port `3000`.
-6. Bind your domain to the app service.
-7. Enable HTTPS in the panel or reverse proxy.
+1. 从 Git 仓库创建新应用。
+2. 选择 Docker Compose 部署方式。
+3. Compose 文件使用仓库根目录的 `docker-compose.yml`。
+4. 添加 `.env.example` 中列出的环境变量。
+5. 暴露容器端口 `3000`。
+6. 将域名绑定到应用服务。
+7. 在面板或反向代理中开启 HTTPS。
 
-If your panel deploys from a Dockerfile only:
+如果你的面板只支持 Dockerfile 部署：
 
-1. Build from the repository root.
-2. Use `Dockerfile`.
-3. Provide a managed PostgreSQL database.
-4. Set `DATABASE_URL` to the managed database connection string.
-5. Set `ADMIN_EMAIL`, `ADMIN_PASSWORD`, and `ADMIN_SESSION_SECRET`.
-6. Expose port `3000`.
+1. 从仓库根目录构建镜像。
+2. 使用 `Dockerfile`。
+3. 准备一个可用的 PostgreSQL 数据库。
+4. 将 `DATABASE_URL` 设置为该数据库的连接地址。
+5. 设置 `ADMIN_EMAIL`、`ADMIN_PASSWORD` 和 `ADMIN_SESSION_SECRET`。
+6. 暴露端口 `3000`。
 
-## 5. Reverse Proxy
+## 5. 反向代理
 
-For Nginx, Caddy, Traefik, Dokploy, or similar tools, proxy traffic to:
+如果使用 Nginx、Caddy、Traefik、Dokploy 或类似工具，将流量代理到：
 
 ```txt
 http://app:3000
 ```
 
-For a single-server Docker Compose setup, map host port `3000` directly or let your panel attach a reverse proxy.
+单服务器 Docker Compose 部署时，可以直接映射宿主机 `3000` 端口，也可以交给面板自动接入反向代理。
 
-## 6. Backups
+## 6. 数据备份
 
-The PostgreSQL data is stored in the Docker volume:
+PostgreSQL 数据保存在 Docker volume：
 
 ```txt
 postgres_data
 ```
 
-Back up this volume or use `pg_dump` regularly.
+请定期备份该 volume，或使用 `pg_dump` 备份数据库。
 
-Example:
+示例：
 
 ```bash
 docker compose exec db pg_dump -U wnn wnn_portal > backup.sql

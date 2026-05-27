@@ -1,12 +1,12 @@
 # Personal Hub 1.0
 
-English | [简体中文](./README.zh-CN.md)
+[English](./README.en.md) | 简体中文
 
-Personal Hub 1.0 is an open-source, self-hosted personal navigation site with a built-in admin console. It is designed for personal homepages, link hubs, developer portals, and lightweight start pages.
+Personal Hub 1.0 是一个开源、自托管的个人导航站，内置后台管理系统。它适合用作个人主页、链接导航、开发者入口页、轻量起始页。
 
-The UI follows the Stitch Aura design package: Apple-like minimalism, glass surfaces, fluid backgrounds, and unified light/dark modes.
+界面风格基于 Stitch Aura 设计包：Apple 风格极简、毛玻璃质感、动态流体背景，并支持明暗模式。
 
-## Stack
+## 技术栈
 
 - Next.js App Router
 - Tailwind CSS
@@ -14,43 +14,43 @@ The UI follows the Stitch Aura design package: Apple-like minimalism, glass surf
 - Prisma
 - Docker Compose
 
-## Features
+## 功能
 
-- Public personal portal at `/`
-- Admin console at `/admin`
-- Link management with categories, visibility status, and ordering
-- Profile, social links, and featured contact cards
-- Global site settings
-- Light/dark mode
-- Daily visitor statistics
-- Docker-first self-hosting
+- 前台个人导航页：`/`
+- 后台管理入口：`/admin`
+- 链接管理：分类、显示/隐藏、排序
+- 个人资料、社交链接、重点联系卡片
+- 全局站点设置
+- 明暗模式
+- 每日访问人数统计
+- Docker 优先的自托管部署
 
-## Quick Start With Docker
+## Docker 快速开始
 
 ```bash
 cp .env.example .env
 docker compose up -d --build
 ```
 
-Open:
+打开：
 
-- Portal: `http://localhost:3000`
-- Admin: `http://localhost:3000/admin`
+- 前台：`http://localhost:3000`
+- 后台：`http://localhost:3000/admin`
 
-Default credentials come from `.env`:
+默认后台账号来自 `.env`：
 
 ```bash
 ADMIN_EMAIL="admin@example.com"
 ADMIN_PASSWORD="change-me-now"
 ```
 
-Change them before exposing the app publicly.
+正式公开访问前，请务必修改默认密码。
 
-The container runs Prisma migrations and seed data automatically on startup.
+容器启动时会自动执行 Prisma 数据库迁移和初始数据写入。
 
-## Local Development
+## 本地开发
 
-Start a local PostgreSQL database, set `DATABASE_URL`, then run:
+先启动一个本地 PostgreSQL 数据库，配置 `DATABASE_URL`，然后执行：
 
 ```bash
 npm install
@@ -60,18 +60,18 @@ npm run db:seed
 npm run dev
 ```
 
-## Routes
+## 路由
 
-- `/` public portal
-- `/admin` admin entry, login, and dashboard
-- `/admin/login` login compatibility route
-- `/admin/dashboard` dashboard
-- `/admin/links` links management
-- `/admin/categories` categories management
-- `/admin/profile` profile and contact settings
-- `/admin/settings` global settings
+- `/` 前台导航页
+- `/admin` 后台入口、登录页和仪表盘
+- `/admin/login` 登录兼容路由
+- `/admin/dashboard` 仪表盘
+- `/admin/links` 链接管理
+- `/admin/categories` 分类管理
+- `/admin/profile` 个人资料和联系方式
+- `/admin/settings` 全局设置
 
-## Environment Variables
+## 环境变量
 
 ```bash
 DATABASE_URL="postgresql://wnn:change_me@db:5432/wnn_portal?schema=public"
@@ -83,12 +83,12 @@ ADMIN_PASSWORD="change-me-now"
 ADMIN_SESSION_SECRET="replace-with-a-long-random-string"
 ```
 
-For production, use a strong `ADMIN_SESSION_SECRET` and a unique admin password.
+生产环境请使用强密码，并设置足够长的 `ADMIN_SESSION_SECRET`。
 
-## Deployment
+## 部署
 
-See [DEPLOYMENT.md](./DEPLOYMENT.md) for Docker, Docker Compose, Hermes, and Dok Docker Compose deployment notes. Chinese version: [DEPLOYMENT.zh-CN.md](./DEPLOYMENT.zh-CN.md).
+Docker、Docker Compose、Hermes 和 Dok（Docker Compose）部署说明见：[DEPLOYMENT.md](./DEPLOYMENT.md)。英文版：[DEPLOYMENT.en.md](./DEPLOYMENT.en.md)。
 
-## License
+## 开源协议
 
 MIT
