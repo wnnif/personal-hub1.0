@@ -87,7 +87,7 @@ For production, use a strong `ADMIN_SESSION_SECRET` and a unique admin password.
 
 ## Deployment
 
-See [DEPLOYMENT.md](./DEPLOYMENT.md) for Docker, Docker Compose, Hermes, and Dok-style deployment notes. Chinese version: [DEPLOYMENT.zh-CN.md](./DEPLOYMENT.zh-CN.md).
+See [DEPLOYMENT.md](./DEPLOYMENT.md) for Docker, Docker Compose, Hermes, and Dok Docker Compose deployment notes. Chinese version: [DEPLOYMENT.zh-CN.md](./DEPLOYMENT.zh-CN.md).
 
 ## License
 

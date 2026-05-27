@@ -87,7 +87,7 @@ ADMIN_SESSION_SECRET="replace-with-a-long-random-string"
 
 ## 部署
 
-Docker、Docker Compose、Hermes 和 Dok 风格面板部署说明见：[DEPLOYMENT.zh-CN.md](./DEPLOYMENT.zh-CN.md)。
+Docker、Docker Compose、Hermes 和 Dok（Docker Compose）部署说明见：[DEPLOYMENT.zh-CN.md](./DEPLOYMENT.zh-CN.md)。
 
 ## 开源协议
 

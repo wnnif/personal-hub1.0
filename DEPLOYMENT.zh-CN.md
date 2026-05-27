@@ -86,9 +86,9 @@ docker compose down
 docker compose down -v
 ```
 
-## 4. Hermes / Dok 风格面板部署
+## 4. Hermes / Dok Docker Compose 部署
 
-如果你的服务器面板支持从 Git 仓库使用 Docker Compose 部署：
+Dok 使用 Docker Compose 部署。如果你的服务器面板支持从 Git 仓库使用 Docker Compose 部署：
 
 1. 从 Git 仓库创建新应用。
 2. 选择 Docker Compose 部署方式。

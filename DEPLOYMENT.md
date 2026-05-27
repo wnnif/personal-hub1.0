@@ -86,9 +86,9 @@ Stop and remove database data:
 docker compose down -v
 ```
 
-## 4. Hermes / Dok-Style Panel Deployment
+## 4. Hermes / Dok Docker Compose Deployment
 
-If your server panel can deploy from a Git repository with Docker Compose:
+Dok deployment uses Docker Compose. If your server panel can deploy from a Git repository with Docker Compose:
 
 1. Create a new app from the Git repository.
 2. Select Docker Compose deployment.
