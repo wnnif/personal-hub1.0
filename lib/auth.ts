@@ -75,7 +75,7 @@ export function clearSessionCookie(response: NextResponse) {
 
 export function requireAdmin(request: NextRequest) {
   if (!isAuthenticated(request)) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ error: "未登录或登录已过期" }, { status: 401 });
   }
 
   return null;

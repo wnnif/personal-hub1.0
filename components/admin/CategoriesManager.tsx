@@ -33,7 +33,7 @@ export function CategoriesManager() {
   }
 
   async function remove(id: string) {
-    if (!window.confirm("Delete this category? Links will keep their data but lose this category.")) return;
+    if (!window.confirm("确定删除这个分类吗？相关链接会保留，但会失去该分类。")) return;
     await deleteCategory(id);
     await refresh();
   }
@@ -43,7 +43,7 @@ export function CategoriesManager() {
       <div className="flex justify-end">
         <button onClick={() => setEditing({ ...emptyCategory, sortOrder: data.categories.length + 1 })} className="flex items-center gap-2 rounded-full bg-primary px-6 py-3 font-bold text-white">
           <span className="material-symbols-outlined text-[20px]">add</span>
-          Add Category
+          新增分类
         </button>
       </div>
 
@@ -64,7 +64,7 @@ export function CategoriesManager() {
                 </div>
               </div>
               <h2 className="text-2xl font-bold">{category.name}</h2>
-              <p className="mt-2 text-sm font-semibold text-outline">{activeLinks} Active Links</p>
+              <p className="mt-2 text-sm font-semibold text-outline">{activeLinks} 个公开链接</p>
               <button
                 onClick={async () => {
                   await saveCategory({ ...category, isActive: !category.isActive });
@@ -72,7 +72,7 @@ export function CategoriesManager() {
                 }}
                 className={`mt-6 rounded-full px-3 py-1 text-xs font-bold ${category.isActive ? "bg-emerald-500/10 text-emerald-600" : "bg-slate-500/10 text-slate-500"}`}
               >
-                {category.isActive ? "Visible" : "Hidden"}
+                {category.isActive ? "显示" : "隐藏"}
               </button>
             </section>
           );
@@ -80,11 +80,11 @@ export function CategoriesManager() {
       </div>
 
       {editing && (
-        <EditorModal title={editing.id ? "Edit Category" : "Add Category"} onClose={() => setEditing(null)} onSubmit={submit}>
+        <EditorModal title={editing.id ? "编辑分类" : "新增分类"} onClose={() => setEditing(null)} onSubmit={submit}>
           <div className="grid gap-4 md:grid-cols-2">
-            <Input label="Name" value={editing.name} onChange={(name) => setEditing({ ...editing, name })} />
-            <Input label="Icon" value={editing.icon} onChange={(icon) => setEditing({ ...editing, icon })} />
-            <Input label="Sort Order" value={String(editing.sortOrder)} onChange={(sortOrder) => setEditing({ ...editing, sortOrder: Number(sortOrder) })} />
+            <Input label="名称" value={editing.name} onChange={(name) => setEditing({ ...editing, name })} />
+            <Input label="图标" value={editing.icon} onChange={(icon) => setEditing({ ...editing, icon })} />
+            <Input label="排序" value={String(editing.sortOrder)} onChange={(sortOrder) => setEditing({ ...editing, sortOrder: Number(sortOrder) })} />
           </div>
         </EditorModal>
       )}

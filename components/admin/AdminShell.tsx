@@ -5,11 +5,11 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const navItems = [
-  { href: "/admin/dashboard", label: "Dashboard", icon: "dashboard" },
-  { href: "/admin/links", label: "Links", icon: "link" },
-  { href: "/admin/categories", label: "Categories", icon: "category" },
-  { href: "/admin/profile", label: "Profile", icon: "account_circle" },
-  { href: "/admin/settings", label: "Settings", icon: "settings" }
+  { href: "/admin/dashboard", label: "仪表盘", icon: "dashboard" },
+  { href: "/admin/links", label: "链接", icon: "link" },
+  { href: "/admin/categories", label: "分类", icon: "category" },
+  { href: "/admin/profile", label: "资料", icon: "account_circle" },
+  { href: "/admin/settings", label: "设置", icon: "settings" }
 ];
 
 export function AdminShell({ title, description, children }: { title: string; description: string; children: React.ReactNode }) {
@@ -55,7 +55,7 @@ export function AdminShell({ title, description, children }: { title: string; de
   if (!ready) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-surface text-on-surface dark:bg-slate-950 dark:text-white">
-        <div className="glass-card rounded-[2rem] px-8 py-5 text-sm font-semibold">Loading console...</div>
+        <div className="glass-card rounded-[2rem] px-8 py-5 text-sm font-semibold">正在加载后台...</div>
       </div>
     );
   }
@@ -68,7 +68,7 @@ export function AdminShell({ title, description, children }: { title: string; de
           <span className="material-symbols-outlined flex h-11 w-11 items-center justify-center rounded-2xl bg-primary text-white">admin_panel_settings</span>
           <div>
             <div className="font-bold">Wnn Portal</div>
-            <div className="text-xs font-semibold uppercase tracking-[0.18em] text-outline">Admin Console</div>
+            <div className="text-xs font-semibold uppercase tracking-[0.18em] text-outline">管理后台</div>
           </div>
         </div>
 
@@ -93,11 +93,11 @@ export function AdminShell({ title, description, children }: { title: string; de
         <div className="absolute bottom-6 left-6 right-6 space-y-2">
           <Link href="/" target="_blank" className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold transition hover:bg-white/50 dark:hover:bg-white/10">
             <span className="material-symbols-outlined text-[20px]">open_in_new</span>
-            View Site
+            查看前台
           </Link>
           <button onClick={logout} className="flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-red-600 transition hover:bg-red-500/10">
             <span className="material-symbols-outlined text-[20px]">logout</span>
-            Logout
+            退出登录
           </button>
         </div>
       </aside>
@@ -110,7 +110,7 @@ export function AdminShell({ title, description, children }: { title: string; de
               <p className="mt-1 text-sm text-on-surface-variant dark:text-outline-variant">{description}</p>
             </div>
             <div className="flex items-center gap-2">
-              <button onClick={toggleTheme} className="flex h-11 w-11 items-center justify-center rounded-full glass-card text-primary dark:text-inverse-primary" aria-label="Toggle theme">
+              <button onClick={toggleTheme} className="flex h-11 w-11 items-center justify-center rounded-full glass-card text-primary dark:text-inverse-primary" aria-label="切换明暗模式">
                 <span className="material-symbols-outlined">{darkMode ? "light_mode" : "dark_mode"}</span>
               </button>
               <Link href="/admin/dashboard" className="flex h-11 w-11 items-center justify-center rounded-full glass-card lg:hidden" aria-label="Admin menu">

@@ -33,8 +33,8 @@ export function LoginForm({ redirectTo = "/admin" }: { redirectTo?: string }) {
     setLoading(false);
 
     if (!response.ok) {
-      const body = (await response.json().catch(() => ({ error: "Login failed" }))) as { error?: string };
-      setError(body.error ?? "Login failed");
+      const body = (await response.json().catch(() => ({ error: "登录失败" }))) as { error?: string };
+      setError(body.error ?? "登录失败");
       return;
     }
 
@@ -57,7 +57,7 @@ export function LoginForm({ redirectTo = "/admin" }: { redirectTo?: string }) {
             <span className="material-symbols-outlined flex h-12 w-12 items-center justify-center rounded-2xl bg-primary text-white">admin_panel_settings</span>
             <div>
               <h1 className="text-2xl font-bold">Wnn Portal</h1>
-              <p className="text-sm text-on-surface-variant dark:text-outline-variant">Enter your credentials to access the console.</p>
+              <p className="text-sm text-on-surface-variant dark:text-outline-variant">输入账号密码进入管理后台。</p>
             </div>
           </div>
           <button onClick={toggleTheme} className="flex h-10 w-10 items-center justify-center rounded-full glass-card text-primary dark:text-inverse-primary" type="button">
@@ -67,33 +67,33 @@ export function LoginForm({ redirectTo = "/admin" }: { redirectTo?: string }) {
 
         <form onSubmit={submit} className="space-y-5">
           <label className="block">
-            <span className="mb-2 block text-sm font-semibold">Email</span>
+            <span className="mb-2 block text-sm font-semibold">邮箱</span>
             <div className="flex items-center gap-3 rounded-2xl bg-white/60 px-4 py-3 dark:bg-white/5">
               <span className="material-symbols-outlined text-[20px] text-outline">mail</span>
               <input value={email} onChange={(event) => setEmail(event.target.value)} className="w-full border-0 bg-transparent p-0 focus:ring-0" type="email" placeholder="you@example.com" />
             </div>
           </label>
           <label className="block">
-            <span className="mb-2 block text-sm font-semibold">Password</span>
+            <span className="mb-2 block text-sm font-semibold">密码</span>
             <div className="flex items-center gap-3 rounded-2xl bg-white/60 px-4 py-3 dark:bg-white/5">
               <span className="material-symbols-outlined text-[20px] text-outline">lock</span>
-              <input value={password} onChange={(event) => setPassword(event.target.value)} className="w-full border-0 bg-transparent p-0 focus:ring-0" type="password" placeholder="••••••••" />
+              <input value={password} onChange={(event) => setPassword(event.target.value)} className="w-full border-0 bg-transparent p-0 focus:ring-0" type="password" placeholder="请输入密码" />
             </div>
           </label>
 
           <p className="rounded-2xl bg-primary/10 px-4 py-3 text-sm font-medium text-primary dark:text-inverse-primary">
-            Default Docker credentials are configured through <code>ADMIN_EMAIL</code> and <code>ADMIN_PASSWORD</code>.
+            默认后台账号通过 <code>ADMIN_EMAIL</code> 和 <code>ADMIN_PASSWORD</code> 配置。
           </p>
           {error && <p className="rounded-2xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600">{error}</p>}
 
           <button disabled={loading} className="h-12 w-full rounded-full bg-primary px-8 font-bold text-white transition hover:brightness-110 active:scale-[0.98]" type="submit">
-            {loading ? "Signing in..." : "Login"}
+            {loading ? "正在登录..." : "登录"}
           </button>
         </form>
 
         <div className="mt-6 flex items-center justify-between text-sm text-outline">
-          <span>Protected by Wnn Security.</span>
-          <Link href="/">Back to site</Link>
+          <span>由 Wnn 安全会话保护。</span>
+          <Link href="/">返回前台</Link>
         </div>
       </section>
     </main>

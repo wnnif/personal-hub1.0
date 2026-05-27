@@ -3,7 +3,7 @@ import { LinksManager } from "@/components/admin/LinksManager";
 
 export default function LinksPage() {
   return (
-    <AdminShell title="Links Management" description="Manage, reorder, and categorize your portal links.">
+    <AdminShell title="链接管理" description="管理、排序和分类你的导航链接。">
       <LinksManager />
     </AdminShell>
   );

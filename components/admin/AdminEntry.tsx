@@ -18,7 +18,7 @@ export function AdminEntry() {
   if (authenticated === null) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-surface text-on-surface dark:bg-slate-950 dark:text-white">
-        <div className="glass-card rounded-[2rem] px-8 py-5 text-sm font-semibold">Loading console...</div>
+        <div className="glass-card rounded-[2rem] px-8 py-5 text-sm font-semibold">正在加载后台...</div>
       </div>
     );
   }
@@ -28,7 +28,7 @@ export function AdminEntry() {
   }
 
   return (
-    <AdminShell title="Dashboard" description="Here is what's happening with your portal today.">
+    <AdminShell title="仪表盘" description="查看导航站的链接数量、访问统计和最近内容。">
       <DashboardClient />
     </AdminShell>
   );

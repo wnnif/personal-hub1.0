@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Wnn Portal",
-  description: "Personal portal and navigation site for Wnn."
+  title: "Wnn 个人导航",
+  description: "Wnn 的个人导航站，集中管理常用链接、工具资源和联系方式。"
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

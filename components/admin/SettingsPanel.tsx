@@ -27,18 +27,18 @@ export function SettingsPanel() {
         <div className="mb-6 flex items-center gap-3">
           <span className="material-symbols-outlined flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary dark:text-inverse-primary">language</span>
           <div>
-            <h2 className="text-2xl font-bold">Site Configuration</h2>
-            <p className="text-sm text-outline">Global title and SEO details.</p>
+            <h2 className="text-2xl font-bold">站点配置</h2>
+            <p className="text-sm text-outline">全局标题和 SEO 描述。</p>
           </div>
         </div>
         <div className="grid gap-4">
-          <Input label="Site Title" value={settings.siteTitle} onChange={(siteTitle) => setSettings({ ...settings, siteTitle })} />
+          <Input label="站点标题" value={settings.siteTitle} onChange={(siteTitle) => setSettings({ ...settings, siteTitle })} />
           <label>
-            <span className="mb-2 block text-sm font-semibold">SEO Meta Description</span>
+            <span className="mb-2 block text-sm font-semibold">SEO 描述</span>
             <textarea value={settings.seoDescription} onChange={(event) => setSettings({ ...settings, seoDescription: event.target.value })} maxLength={160} className="min-h-28 w-full rounded-2xl border-0 bg-white/60 px-4 py-3 focus:ring-2 focus:ring-primary dark:bg-white/5" />
-            <span className="mt-1 block text-xs font-semibold text-outline">{settings.seoDescription.length} / 160 characters</span>
+            <span className="mt-1 block text-xs font-semibold text-outline">{settings.seoDescription.length} / 160 字</span>
           </label>
-          <Input label="Google Analytics ID" value={settings.analyticsId} onChange={(analyticsId) => setSettings({ ...settings, analyticsId })} />
+          <Input label="Google Analytics 跟踪 ID" value={settings.analyticsId} onChange={(analyticsId) => setSettings({ ...settings, analyticsId })} />
         </div>
       </section>
 
@@ -46,8 +46,8 @@ export function SettingsPanel() {
         <div className="mb-6 flex items-center gap-3">
           <span className="material-symbols-outlined flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary dark:text-inverse-primary">palette</span>
           <div>
-            <h2 className="text-2xl font-bold">Theme Configuration</h2>
-            <p className="text-sm text-outline">Default appearance for first-time visitors.</p>
+            <h2 className="text-2xl font-bold">主题配置</h2>
+            <p className="text-sm text-outline">新访客首次打开时使用的默认外观。</p>
           </div>
         </div>
         <div className="grid gap-3 md:grid-cols-3">
@@ -61,7 +61,7 @@ export function SettingsPanel() {
               }`}
             >
               <span className="material-symbols-outlined mb-8 block">{mode === "system" ? "desktop_windows" : mode === "light" ? "light_mode" : "dark_mode"}</span>
-              {mode[0].toUpperCase() + mode.slice(1)}
+              {mode === "system" ? "跟随系统" : mode === "light" ? "浅色" : "深色"}
             </button>
           ))}
         </div>
@@ -70,7 +70,7 @@ export function SettingsPanel() {
       <div className="flex justify-end">
         <button type="submit" className="flex items-center gap-2 rounded-full bg-primary px-8 py-4 font-bold text-white shadow-lg shadow-primary/20">
           <span className="material-symbols-outlined text-[20px]">save</span>
-          {saved ? "Saved" : "Save Changes"}
+          {saved ? "已保存" : "保存修改"}
         </button>
       </div>
     </form>

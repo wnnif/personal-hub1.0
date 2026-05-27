@@ -39,7 +39,7 @@ export async function getPortalDataset(): Promise<PortalDataset> {
         url: link.url,
         icon: link.icon,
         categoryId: link.categoryId ?? "",
-        categoryName: link.category?.name ?? "Uncategorized",
+        categoryName: link.category?.name ?? "未分类",
         sortOrder: link.sortOrder,
         isActive: link.isActive
       })),

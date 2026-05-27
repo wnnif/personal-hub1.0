@@ -24,11 +24,11 @@ export function DashboardClient() {
 
   const stats = useMemo(
     () => [
-      { label: "Total Links", value: data.links.length, icon: "link", delta: "Ready" },
-      { label: "Categories", value: data.categories.length, icon: "category", delta: "Stable" },
-      { label: "Today Visitors", value: visits.todayVisitors, icon: "monitoring", delta: "Daily unique" },
-      { label: "Active Links", value: data.links.filter((link) => link.isActive).length, icon: "visibility", delta: "Public" },
-      { label: "Hidden Links", value: data.links.filter((link) => !link.isActive).length, icon: "visibility_off", delta: "Private" }
+      { label: "链接总数", value: data.links.length, icon: "link", delta: "已收录" },
+      { label: "分类数量", value: data.categories.length, icon: "category", delta: "稳定" },
+      { label: "今日访问", value: visits.todayVisitors, icon: "monitoring", delta: "按浏览器去重" },
+      { label: "公开链接", value: data.links.filter((link) => link.isActive).length, icon: "visibility", delta: "前台可见" },
+      { label: "隐藏链接", value: data.links.filter((link) => !link.isActive).length, icon: "visibility_off", delta: "仅后台保留" }
     ],
     [data, visits.todayVisitors]
   );
@@ -53,8 +53,8 @@ export function DashboardClient() {
       <section className="glass-card rounded-[2rem] p-6">
         <div className="mb-6 flex items-center justify-between">
           <div>
-            <h2 className="text-xl font-bold">Daily Visitors</h2>
-            <p className="text-sm text-outline">Approximate unique browsers over the last 14 days.</p>
+            <h2 className="text-xl font-bold">每日访问</h2>
+            <p className="text-sm text-outline">最近 14 天的浏览器去重访问统计。</p>
           </div>
           <span className="material-symbols-outlined flex h-11 w-11 items-center justify-center rounded-2xl bg-primary/10 text-primary dark:text-inverse-primary">bar_chart</span>
         </div>
@@ -73,8 +73,8 @@ export function DashboardClient() {
 
       <section className="glass-card rounded-[2rem] p-6">
         <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-xl font-bold">Recent Links</h2>
-          <span className="text-sm font-semibold text-outline">Latest {Math.min(data.links.length, 5)}</span>
+          <h2 className="text-xl font-bold">最近链接</h2>
+          <span className="text-sm font-semibold text-outline">最新 {Math.min(data.links.length, 5)} 条</span>
         </div>
         <div className="divide-y divide-outline-variant/30">
           {data.links.slice(0, 5).map((link) => (
@@ -87,7 +87,7 @@ export function DashboardClient() {
                 </div>
               </div>
               <span className={`rounded-full px-3 py-1 text-xs font-bold ${link.isActive ? "bg-emerald-500/10 text-emerald-600" : "bg-slate-500/10 text-slate-500"}`}>
-                {link.isActive ? "Active" : "Hidden"}
+                {link.isActive ? "显示" : "隐藏"}
               </span>
             </div>
           ))}
