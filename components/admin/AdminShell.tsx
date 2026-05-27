@@ -91,7 +91,7 @@ export function AdminShell({ title, description, children }: { title: string; de
         </nav>
 
         <div className="absolute bottom-6 left-6 right-6 space-y-2">
-          <Link href="/" target="_blank" className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold transition hover:bg-white/50 dark:hover:bg-white/10">
+          <Link href="/" className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold transition hover:bg-white/50 dark:hover:bg-white/10">
             <span className="material-symbols-outlined text-[20px]">open_in_new</span>
             查看前台
           </Link>

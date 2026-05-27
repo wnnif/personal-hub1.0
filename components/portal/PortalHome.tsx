@@ -56,6 +56,20 @@ export function PortalHome() {
 
   const categories = useMemo(() => ["全部", ...data.categories.filter((item) => item.isActive).map((item) => item.name)], [data.categories]);
   const selectedEngine = data.searchEngines.find((engine) => engine.name === searchEngine) ?? data.searchEngines[0];
+  const contactLinks = useMemo(
+    () =>
+      data.socials
+        .filter((item) => item.isActive && hasUsableUrl(item.url))
+        .sort((a, b) => a.sortOrder - b.sortOrder)
+        .map((item) => ({
+          id: item.id,
+          label: item.label,
+          icon: item.icon,
+          hint: displayUrl(item.url),
+          url: item.url
+        })),
+    [data.socials]
+  );
   const visibleLinks = data.links
     .filter((link) => link.isActive)
     .filter((link) => activeCategory === "全部" || link.categoryName === activeCategory)
@@ -95,7 +109,14 @@ export function PortalHome() {
         <aside className="lg:w-80 lg:flex-shrink-0">
           <section className="glass-card sticky top-24 flex flex-col items-center rounded-[2rem] p-10 text-center transition duration-300 hover:-translate-y-1 hover:shadow-2xl lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto lg:items-start lg:text-left">
             <div className="mb-6 h-32 w-32 overflow-hidden rounded-full border-4 border-primary-container/20 shadow-lg dark:border-inverse-primary/20">
-              <img src={data.profile.avatarUrl} alt={data.profile.name} className="h-full w-full object-cover transition duration-500 hover:scale-110" />
+              <img
+                src={data.profile.avatarUrl}
+                alt={data.profile.name}
+                className="h-full w-full object-cover transition duration-500 hover:scale-110"
+                onError={(event) => {
+                  event.currentTarget.src = "/avatar.svg";
+                }}
+              />
             </div>
             <h1 className="mb-1 text-3xl font-semibold">{data.profile.name}</h1>
             <p className="mb-10 max-w-xs text-[17px] leading-7 text-on-surface-variant dark:text-outline-variant">{data.profile.bio}</p>
@@ -106,7 +127,7 @@ export function PortalHome() {
             </div>
 
             <div className="mb-10 grid w-full grid-cols-4 gap-3">
-              {data.socials.filter((item) => item.isActive && hasUsableUrl(item.url)).map((social) => (
+              {contactLinks.map((social) => (
                 <a
                   key={social.id}
                   href={social.url}
@@ -124,7 +145,7 @@ export function PortalHome() {
             </div>
 
             <div className="mb-10 flex w-full flex-col gap-3">
-              {data.featuredLinks.filter((item) => item.isActive && hasUsableUrl(item.url)).map((link) => (
+              {contactLinks.map((link) => (
                 <a
                   key={link.id}
                   href={link.url}
@@ -201,7 +222,7 @@ export function PortalHome() {
           <div className="masonry">
             {visibleLinks.map((item) => (
               <article key={item.id} className="masonry-item card-container cursor-pointer" onClick={() => window.open(normalizeUrl(item.url), "_blank", "noopener,noreferrer")}>
-                <div className="glass-card group relative rounded-3xl p-6 transition duration-300 hover:-translate-y-1.5 hover:shadow-2xl">
+                <div className="glass-card group relative rounded-3xl p-6 pt-12 transition duration-300 hover:-translate-y-1.5 hover:shadow-2xl">
                   <div className="mb-3 flex items-center gap-6">
                     <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/5 text-primary shadow-sm transition group-hover:bg-primary group-hover:text-white dark:bg-white/5 dark:text-inverse-primary">
                       <span className="material-symbols-outlined text-[24px]">{item.icon}</span>
@@ -212,7 +233,7 @@ export function PortalHome() {
                     </div>
                   </div>
                   <p className="line-clamp-2 text-[17px] leading-7 text-on-surface-variant dark:text-outline-variant">{item.description}</p>
-                  <div className="pointer-events-none absolute bottom-5 left-6 max-w-[calc(100%-3rem)] translate-y-2 opacity-0 transition duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+                  <div className="pointer-events-none absolute left-1/2 top-4 max-w-[calc(100%-3rem)] -translate-x-1/2 -translate-y-1 opacity-0 transition duration-300 group-hover:translate-y-0 group-hover:opacity-100">
                     <div className="inline-flex max-w-full items-center gap-1 rounded-full border border-primary-container/10 bg-white/90 px-3 py-1.5 text-sm font-bold text-primary shadow-lg backdrop-blur-xl dark:border-white/10 dark:bg-slate-900/90 dark:text-inverse-primary">
                       <span className="material-symbols-outlined text-[16px]" aria-hidden="true">
                         language

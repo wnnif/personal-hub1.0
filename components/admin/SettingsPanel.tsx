@@ -38,7 +38,13 @@ export function SettingsPanel() {
             <textarea value={settings.seoDescription} onChange={(event) => setSettings({ ...settings, seoDescription: event.target.value })} maxLength={160} className="min-h-28 w-full rounded-2xl border-0 bg-white/60 px-4 py-3 focus:ring-2 focus:ring-primary dark:bg-white/5" />
             <span className="mt-1 block text-xs font-semibold text-outline">{settings.seoDescription.length} / 160 字</span>
           </label>
-          <Input label="Google Analytics 跟踪 ID" value={settings.analyticsId} onChange={(analyticsId) => setSettings({ ...settings, analyticsId })} />
+          <label>
+            <span className="mb-2 block text-sm font-semibold">Google Analytics 跟踪 ID（可选）</span>
+            <input value={settings.analyticsId} onChange={(event) => setSettings({ ...settings, analyticsId: event.target.value })} placeholder="例如 G-XXXXXXXXXX，不用就留空" className="w-full rounded-2xl border-0 bg-white/60 px-4 py-3 focus:ring-2 focus:ring-primary dark:bg-white/5" />
+            <span className="mt-2 block text-xs font-semibold text-outline">
+              这是 Google Analytics 4 的统计编号，用来接入谷歌访问统计；本站后台已经内置每日访问人数，不需要 GA 可以留空。
+            </span>
+          </label>
         </div>
       </section>
 

@@ -13,8 +13,7 @@ const profile = {
   id: "main",
   name: "Wnn",
   bio: "收集常用工具、创作资源和个人入口，保持简洁、高效、好访问。",
-  avatarUrl:
-    "https://lh3.googleusercontent.com/aida-public/AB6AXuCgSRLkuyneZ18bbyhE7Mtztjfh-p6HBxGcAyxM2_Tu5_PW7APqpBCgwEDuOZiueNMft044fN2dX5_H5Q2JV9kA5bKlfB8fERgY29QZBAfwlAQScOmAiWquQgyNtRIsq3hvuLKZTX9F480tDFyw4VGS9I2V3TYjgw4wBf1yKSTYpAd0cvkUVVMU3YmEesfY_03vnYx6CCP__mnY6M3J7cXHErCJrrns8kDr3LhEY0y1_ETvsaUxt6wQ5jN53nHkuwz4MUKYJj7ieIs",
+  avatarUrl: "/avatar.svg",
   footerText: "© 2026 Wnn Portal.<br />轻量、高效、可自托管。"
 };
 

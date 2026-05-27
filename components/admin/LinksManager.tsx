@@ -81,7 +81,7 @@ export function LinksManager() {
               <option key={category}>{category}</option>
             ))}
           </select>
-          <button onClick={newLink} className="flex items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 font-bold text-white transition active:scale-[0.98]">
+          <button type="button" onClick={newLink} className="flex items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 font-bold text-white transition active:scale-[0.98]">
             <span className="material-symbols-outlined text-[20px]">add</span>
             新增链接
           </button>
