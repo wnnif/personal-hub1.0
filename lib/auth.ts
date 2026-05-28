@@ -1,7 +1,8 @@
 import crypto from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
+import { ADMIN_COOKIE_NAME } from "./auth-constants";
 
-const COOKIE_NAME = "wnn_admin_session";
+const COOKIE_NAME = ADMIN_COOKIE_NAME;
 const SESSION_TTL_SECONDS = 60 * 60 * 24 * 7;
 const DEV_FALLBACK_SECRET = "dev-insecure-session-secret";
 
@@ -48,8 +49,16 @@ export function isAuthenticated(request: NextRequest) {
   }
 
   try {
-    const session = JSON.parse(Buffer.from(payload, "base64url").toString("utf8")) as { email: string; exp: number };
-    return session.email === adminEmail() && session.exp > Date.now();
+    const session = JSON.parse(Buffer.from(payload, "base64url").toString("utf8")) as {
+      email: string;
+      exp: number;
+      passwordFingerprint?: string;
+    };
+    return (
+      session.email === adminEmail() &&
+      session.exp > Date.now() &&
+      session.passwordFingerprint === passwordFingerprint()
+    );
   } catch {
     return false;
   }
@@ -59,7 +68,8 @@ export function setSessionCookie(response: NextResponse) {
   const payload = Buffer.from(
     JSON.stringify({
       email: adminEmail(),
-      exp: Date.now() + SESSION_TTL_SECONDS * 1000
+      exp: Date.now() + SESSION_TTL_SECONDS * 1000,
+      passwordFingerprint: passwordFingerprint()
     })
   ).toString("base64url");
 
@@ -146,6 +156,13 @@ function sessionSecret() {
 }
 
 let warnedDevSecret = false;
+
+function passwordFingerprint() {
+  const source = process.env.ADMIN_PASSWORD_SHA256
+    ? `sha256:${process.env.ADMIN_PASSWORD_SHA256}`
+    : `plain:${process.env.ADMIN_PASSWORD || "124"}`;
+  return sha256(source);
+}
 
 function sha256(value: string) {
   return crypto.createHash("sha256").update(value).digest("hex");

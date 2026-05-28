@@ -113,15 +113,33 @@ export function AdminShell({ title, description, children }: { title: string; de
               <button onClick={toggleTheme} className="flex h-11 w-11 items-center justify-center rounded-full glass-card text-primary dark:text-inverse-primary" aria-label="切换明暗模式">
                 <span className="material-symbols-outlined">{darkMode ? "light_mode" : "dark_mode"}</span>
               </button>
-              <Link href="/admin/dashboard" className="flex h-11 w-11 items-center justify-center rounded-full glass-card lg:hidden" aria-label="Admin menu">
-                <span className="material-symbols-outlined">menu</span>
+              <Link href="/" className="flex h-11 w-11 items-center justify-center rounded-full glass-card lg:hidden" aria-label="查看前台">
+                <span className="material-symbols-outlined">open_in_new</span>
               </Link>
             </div>
           </div>
         </header>
 
-        <div className="mx-auto max-w-7xl px-5 py-8 md:px-10">{children}</div>
+        <div className="mx-auto max-w-7xl px-5 pb-28 pt-8 md:px-10 lg:pb-8">{children}</div>
       </div>
+
+      <nav className="fixed bottom-4 left-4 right-4 z-40 grid grid-cols-5 gap-1 rounded-[2rem] border border-white/30 bg-white/80 p-2 shadow-2xl backdrop-blur-2xl dark:border-white/10 dark:bg-slate-950/80 lg:hidden">
+        {navItems.map((item) => {
+          const active = pathname === item.href;
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={`flex min-w-0 flex-col items-center justify-center gap-1 rounded-3xl px-2 py-2 text-[11px] font-semibold transition ${
+                active ? "bg-primary text-white shadow-lg shadow-primary/20" : "text-on-surface-variant hover:bg-white/60 dark:text-outline-variant dark:hover:bg-white/10"
+              }`}
+            >
+              <span className="material-symbols-outlined text-[20px]">{item.icon}</span>
+              <span className="truncate">{item.label}</span>
+            </Link>
+          );
+        })}
+      </nav>
     </div>
   );
 }

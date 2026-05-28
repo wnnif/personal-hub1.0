@@ -20,15 +20,16 @@ The UI follows the Stitch Aura design package: Apple-like minimalism, glass surf
 - Admin console at `/admin`
 - Link management with categories, visibility status, and ordering
 - Profile, social links, and featured contact cards
-- Global site settings
+- Global site settings and SEO title/description
 - Light/dark mode
-- Daily visitor statistics
+- Daily visitor statistics with database-level uniqueness and hashed IPs
 - Docker-first self-hosting
 
 ## Quick Start With Docker
 
 ```bash
 cp .env.example .env
+# edit .env if needed
 docker compose up -d --build
 ```
 
@@ -44,7 +45,13 @@ ADMIN_EMAIL="admin"
 ADMIN_PASSWORD="124"
 ```
 
-Change them before exposing the app publicly.
+These defaults are intended for local onboarding. Before exposing the app publicly, change `ADMIN_PASSWORD`, `POSTGRES_PASSWORD`, `ADMIN_SESSION_SECRET`, and `VISIT_HASH_SALT`.
+
+The production login page does not show the `admin / 124` hint by default. For a public demo, enable it explicitly:
+
+```bash
+NEXT_PUBLIC_SHOW_DEFAULT_CREDENTIALS="true"
+```
 
 The container runs Prisma migrations and seed data automatically on startup.
 
@@ -74,16 +81,22 @@ npm run dev
 ## Environment Variables
 
 ```bash
-DATABASE_URL="postgresql://wnn:change_me@db:5432/wnn_portal?schema=public"
+DATABASE_URL="postgresql://wnn:please_change_me@db:5432/wnn_portal?schema=public"
 POSTGRES_DB="wnn_portal"
 POSTGRES_USER="wnn"
-POSTGRES_PASSWORD="change_me"
+POSTGRES_PASSWORD="please_change_me"
 ADMIN_EMAIL="admin"
 ADMIN_PASSWORD="124"
-ADMIN_SESSION_SECRET="replace-with-a-long-random-string"
+ADMIN_SESSION_SECRET="please_change_this_session_secret"
+VISIT_HASH_SALT="please_change_this_visit_hash_salt"
+NEXT_PUBLIC_SHOW_DEFAULT_CREDENTIALS="false"
 ```
 
-For production, use a strong `ADMIN_SESSION_SECRET` and a unique admin password.
+Notes:
+
+- `ADMIN_SESSION_SECRET` is required in production and signs admin session cookies.
+- Changing `ADMIN_PASSWORD` or `ADMIN_PASSWORD_SHA256` invalidates old admin cookies automatically.
+- `VISIT_HASH_SALT` is used to hash visitor IPs for visit statistics, so raw IPs are not stored by default.
 
 ## Deployment
 

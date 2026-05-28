@@ -17,19 +17,23 @@ Edit `.env`:
 ```bash
 POSTGRES_DB="wnn_portal"
 POSTGRES_USER="wnn"
-POSTGRES_PASSWORD="change_this_database_password"
-DATABASE_URL="postgresql://wnn:change_this_database_password@db:5432/wnn_portal?schema=public"
+POSTGRES_PASSWORD="please_change_me"
+DATABASE_URL="postgresql://wnn:please_change_me@db:5432/wnn_portal?schema=public"
 
 ADMIN_EMAIL="admin"
 ADMIN_PASSWORD="124"
-ADMIN_SESSION_SECRET="replace_with_a_long_random_secret"
+ADMIN_SESSION_SECRET="please_change_this_session_secret"
+VISIT_HASH_SALT="please_change_this_visit_hash_salt"
+NEXT_PUBLIC_SHOW_DEFAULT_CREDENTIALS="false"
 ```
 
 Important:
 
 - `POSTGRES_PASSWORD` and the password inside `DATABASE_URL` must match.
-- Change `ADMIN_PASSWORD` before exposing the app to the internet.
-- Use a long random value for `ADMIN_SESSION_SECRET`.
+- The default `ADMIN_PASSWORD=124` is for local onboarding; change it before exposing the app to the internet.
+- `ADMIN_SESSION_SECRET` is required in production and signs admin session cookies.
+- `VISIT_HASH_SALT` is used to hash visitor IPs for visit statistics; for public deployments, change it to a server-only value.
+- The production login page does not show the `admin / 124` hint by default. Enable `NEXT_PUBLIC_SHOW_DEFAULT_CREDENTIALS=true` only for demos.
 
 ## 2. Deploy With Docker Compose
 

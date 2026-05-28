@@ -87,5 +87,18 @@ model VisitStat {
   visitors  Int      @default(0)
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  uniques   VisitUnique[]
+
   @@map("visit_stats")
+}
+
+model VisitUnique {
+  id        String   @id @default(cuid())
+  date      String
+  ipHash    String   @map("ip_hash")
+  createdAt DateTime @default(now()) @map("created_at")
+  visitStat VisitStat @relation(fields: [date], references: [date], onDelete: Cascade)
+
+  @@unique([date, ipHash])
+  @@map("visit_uniques")
 }

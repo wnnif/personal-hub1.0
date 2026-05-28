@@ -1,3 +1,5 @@
+import crypto from "node:crypto";
+import { Prisma } from "@prisma/client";
 import { defaultDataset } from "./default-data";
 import { prisma } from "./db";
 import { sanitizeFooterText } from "./sanitize";
@@ -177,17 +179,40 @@ export async function updateSettings(settings: SiteSettings) {
   });
 }
 
-export async function recordVisit(date = getTodayKey()) {
-  await prisma.visitStat.upsert({
-    where: { date },
-    update: {
-      visitors: { increment: 1 }
-    },
-    create: {
-      date,
-      visitors: 1
+export async function recordVisit(date = getTodayKey(), ip = "unknown") {
+  const ipHash = hashVisitIp(ip);
+
+  try {
+    await prisma.$transaction(async (tx) => {
+      await tx.visitStat.upsert({
+        where: { date },
+        update: {},
+        create: {
+          date,
+          visitors: 0
+        }
+      });
+
+      await tx.visitUnique.create({
+        data: {
+          date,
+          ipHash
+        }
+      });
+
+      await tx.visitStat.update({
+        where: { date },
+        data: {
+          visitors: { increment: 1 }
+        }
+      });
+    });
+  } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
+      return;
     }
-  });
+    throw error;
+  }
 }
 
 export async function getVisitStats(days = 14) {
@@ -209,6 +234,11 @@ export async function getVisitStats(days = 14) {
 
 function getTodayKey() {
   return new Date().toISOString().slice(0, 10);
+}
+
+function hashVisitIp(ip: string) {
+  const salt = process.env.VISIT_HASH_SALT || process.env.ADMIN_SESSION_SECRET || "visit-stats";
+  return crypto.createHash("sha256").update(`${salt}:${ip}`).digest("hex");
 }
 
 function getRecentDateKeys(days: number) {

@@ -2,7 +2,7 @@
 
 [English](./README.en.md) | 简体中文
 
-Personal Hub 1.0 是一个开源、自托管的个人导航站，内置后台管理系统。它适合用作个人主页、链接导航、开发者入口页、轻量起始页。
+Personal Hub 1.0 是一个开源、自托管的个人导航站，内置后台管理系统。适合个人主页、链接导航、开发者入口页和轻量起始页。
 
 界面风格基于 Stitch Aura 设计包：Apple 风格极简、毛玻璃质感、动态流体背景，并支持明暗模式。
 
@@ -20,15 +20,16 @@ Personal Hub 1.0 是一个开源、自托管的个人导航站，内置后台管
 - 后台管理入口：`/admin`
 - 链接管理：分类、显示/隐藏、排序
 - 个人资料、社交链接、重点联系卡片
-- 全局站点设置
+- 全局站点设置与 SEO 标题/描述
 - 明暗模式
-- 每日访问人数统计
+- 每日访问人数统计，使用数据库唯一去重并保存 IP 哈希
 - Docker 优先的自托管部署
 
 ## Docker 快速开始
 
 ```bash
 cp .env.example .env
+# 按需修改 .env
 docker compose up -d --build
 ```
 
@@ -44,7 +45,13 @@ ADMIN_EMAIL="admin"
 ADMIN_PASSWORD="124"
 ```
 
-正式公开访问前，请务必修改默认密码。
+这些默认值是为了本地快速体验。公开部署前建议修改 `ADMIN_PASSWORD`、`POSTGRES_PASSWORD`、`ADMIN_SESSION_SECRET` 和 `VISIT_HASH_SALT`。
+
+生产环境登录页默认不会展示 `admin / 124` 提示；如果你要做公开演示，可显式设置：
+
+```bash
+NEXT_PUBLIC_SHOW_DEFAULT_CREDENTIALS="true"
+```
 
 容器启动时会自动执行 Prisma 数据库迁移和初始数据写入。
 
@@ -74,16 +81,22 @@ npm run dev
 ## 环境变量
 
 ```bash
-DATABASE_URL="postgresql://wnn:change_me@db:5432/wnn_portal?schema=public"
+DATABASE_URL="postgresql://wnn:please_change_me@db:5432/wnn_portal?schema=public"
 POSTGRES_DB="wnn_portal"
 POSTGRES_USER="wnn"
-POSTGRES_PASSWORD="change_me"
+POSTGRES_PASSWORD="please_change_me"
 ADMIN_EMAIL="admin"
 ADMIN_PASSWORD="124"
-ADMIN_SESSION_SECRET="replace-with-a-long-random-string"
+ADMIN_SESSION_SECRET="please_change_this_session_secret"
+VISIT_HASH_SALT="please_change_this_visit_hash_salt"
+NEXT_PUBLIC_SHOW_DEFAULT_CREDENTIALS="false"
 ```
 
-生产环境请使用强密码，并设置足够长的 `ADMIN_SESSION_SECRET`。
+说明：
+
+- `ADMIN_SESSION_SECRET` 生产环境必须设置，用于签名后台登录 cookie。
+- 修改 `ADMIN_PASSWORD` 或 `ADMIN_PASSWORD_SHA256` 后，旧登录 cookie 会自动失效。
+- `VISIT_HASH_SALT` 用于访问统计 IP 哈希，避免直接保存访客原始 IP。
 
 ## 部署
 

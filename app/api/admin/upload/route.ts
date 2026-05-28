@@ -8,12 +8,14 @@ import { checkRateLimit, clientIp } from "@/lib/rate-limit";
 export const runtime = "nodejs";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
+const MAX_IMAGE_DIMENSION = 4096;
+type ImageExtension = "jpg" | "png" | "webp" | "gif";
 
 /**
  * 通过 magic bytes（文件头）识别真实图片类型，避免仅信任客户端 Content-Type。
  * 返回安全的扩展名；不识别则返回 null。
  */
-function detectImageExtension(bytes: Uint8Array): "jpg" | "png" | "webp" | "gif" | null {
+function detectImageExtension(bytes: Uint8Array): ImageExtension | null {
   if (bytes.length < 12) return null;
   // JPEG: FF D8 FF
   if (bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff) return "jpg";
@@ -48,6 +50,61 @@ function detectImageExtension(bytes: Uint8Array): "jpg" | "png" | "webp" | "gif"
   return null;
 }
 
+function readImageDimensions(bytes: Buffer, extension: ImageExtension): { width: number; height: number } | null {
+  if (extension === "png" && bytes.length >= 24) {
+    return { width: bytes.readUInt32BE(16), height: bytes.readUInt32BE(20) };
+  }
+
+  if (extension === "gif" && bytes.length >= 10) {
+    return { width: bytes.readUInt16LE(6), height: bytes.readUInt16LE(8) };
+  }
+
+  if (extension === "webp" && bytes.length >= 30) {
+    const chunk = bytes.toString("ascii", 12, 16);
+    if (chunk === "VP8 " && bytes.length >= 30) {
+      return { width: bytes.readUInt16LE(26) & 0x3fff, height: bytes.readUInt16LE(28) & 0x3fff };
+    }
+    if (chunk === "VP8L" && bytes.length >= 25) {
+      const b0 = bytes[21];
+      const b1 = bytes[22];
+      const b2 = bytes[23];
+      const b3 = bytes[24];
+      return { width: 1 + (((b1 & 0x3f) << 8) | b0), height: 1 + (((b3 & 0x0f) << 10) | (b2 << 2) | ((b1 & 0xc0) >> 6)) };
+    }
+    if (chunk === "VP8X" && bytes.length >= 30) {
+      const width = 1 + bytes.readUIntLE(24, 3);
+      const height = 1 + bytes.readUIntLE(27, 3);
+      return { width, height };
+    }
+  }
+
+  if (extension === "jpg") {
+    let offset = 2;
+    while (offset + 9 < bytes.length) {
+      if (bytes[offset] !== 0xff) return null;
+      const marker = bytes[offset + 1];
+      const length = bytes.readUInt16BE(offset + 2);
+      if (length < 2) return null;
+      if ((marker >= 0xc0 && marker <= 0xc3) || (marker >= 0xc5 && marker <= 0xc7) || (marker >= 0xc9 && marker <= 0xcb) || (marker >= 0xcd && marker <= 0xcf)) {
+        return { width: bytes.readUInt16BE(offset + 7), height: bytes.readUInt16BE(offset + 5) };
+      }
+      offset += 2 + length;
+    }
+  }
+
+  return null;
+}
+
+function isAllowedImageDimensions(dimensions: { width: number; height: number } | null) {
+  return Boolean(
+    dimensions &&
+      dimensions.width > 0 &&
+      dimensions.height > 0 &&
+      dimensions.width <= MAX_IMAGE_DIMENSION &&
+      dimensions.height <= MAX_IMAGE_DIMENSION
+  );
+}
+
 export async function POST(request: NextRequest) {
   const csrf = requireSameOrigin(request);
   if (csrf) return csrf;
@@ -80,6 +137,14 @@ export async function POST(request: NextRequest) {
   if (!extension) {
     return NextResponse.json(
       { error: "仅支持 JPG、PNG、WebP、GIF 图片，且必须是真实图片文件。" },
+      { status: 400 }
+    );
+  }
+
+  const dimensions = readImageDimensions(bytes, extension);
+  if (!isAllowedImageDimensions(dimensions)) {
+    return NextResponse.json(
+      { error: `图片尺寸不能超过 ${MAX_IMAGE_DIMENSION}x${MAX_IMAGE_DIMENSION}，且必须能读取宽高。` },
       { status: 400 }
     );
   }

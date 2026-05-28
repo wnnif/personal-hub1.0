@@ -17,19 +17,23 @@ cp .env.example .env
 ```bash
 POSTGRES_DB="wnn_portal"
 POSTGRES_USER="wnn"
-POSTGRES_PASSWORD="change_this_database_password"
-DATABASE_URL="postgresql://wnn:change_this_database_password@db:5432/wnn_portal?schema=public"
+POSTGRES_PASSWORD="please_change_me"
+DATABASE_URL="postgresql://wnn:please_change_me@db:5432/wnn_portal?schema=public"
 
 ADMIN_EMAIL="admin"
 ADMIN_PASSWORD="124"
-ADMIN_SESSION_SECRET="replace_with_a_long_random_secret"
+ADMIN_SESSION_SECRET="please_change_this_session_secret"
+VISIT_HASH_SALT="please_change_this_visit_hash_salt"
+NEXT_PUBLIC_SHOW_DEFAULT_CREDENTIALS="false"
 ```
 
 注意：
 
 - `POSTGRES_PASSWORD` 必须和 `DATABASE_URL` 里的数据库密码一致。
-- 公开到互联网前一定要修改 `ADMIN_PASSWORD`。
-- `ADMIN_SESSION_SECRET` 请使用足够长的随机字符串。
+- 默认 `ADMIN_PASSWORD=124` 方便本地首次体验；公开到互联网前建议修改。
+- `ADMIN_SESSION_SECRET` 生产环境必须设置，用于签名后台登录 cookie。
+- `VISIT_HASH_SALT` 用于访问统计 IP 哈希；公开部署时建议修改为只保存在服务器上的值。
+- 生产环境登录页默认不显示 `admin / 124` 提示；需要公开演示时再把 `NEXT_PUBLIC_SHOW_DEFAULT_CREDENTIALS` 改为 `true`。
 
 ## 2. 使用 Docker Compose 部署
 

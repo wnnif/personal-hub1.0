@@ -1,21 +1,16 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { loadPortalDataset } from "@/lib/portal-store";
-import { defaultDataset } from "@/lib/default-data";
 import type { PortalDataset } from "@/lib/types";
+import { displayUrl, hasUsableUrl, isExternalUrl, normalizeUrl } from "@/lib/url";
 
-export function PortalHome() {
-  const [data, setData] = useState<PortalDataset>(defaultDataset);
+export function PortalHome({ initialData }: { initialData: PortalDataset }) {
+  const [data] = useState<PortalDataset>(initialData);
   const [darkMode, setDarkMode] = useState(false);
   const [activeCategory, setActiveCategory] = useState("全部");
-  const [searchEngine, setSearchEngine] = useState(defaultDataset.searchEngines[0].name);
+  const [searchEngine, setSearchEngine] = useState(initialData.searchEngines[0]?.name ?? "");
   const [query, setQuery] = useState("");
   const [time, setTime] = useState("");
-
-  useEffect(() => {
-    loadPortalDataset().then(setData);
-  }, []);
 
   useEffect(() => {
     const today = new Date().toISOString().slice(0, 10);
@@ -131,8 +126,8 @@ export function PortalHome() {
                 <a
                   key={social.id}
                   href={social.url}
-                  target={social.url.startsWith("http") ? "_blank" : "_self"}
-                  rel="noreferrer"
+                  target={isExternalUrl(social.url) ? "_blank" : "_self"}
+                  rel={isExternalUrl(social.url) ? "noreferrer" : undefined}
                   title={social.label}
                   className="card-container glass-card flex h-12 items-center justify-center rounded-2xl text-on-surface transition hover:bg-white/50 hover:text-primary dark:text-white dark:hover:bg-white/10 dark:hover:text-inverse-primary"
                 >
@@ -149,8 +144,8 @@ export function PortalHome() {
                 <a
                   key={link.id}
                   href={link.url}
-                  target={link.url.startsWith("http") ? "_blank" : "_self"}
-                  rel="noreferrer"
+                  target={isExternalUrl(link.url) ? "_blank" : "_self"}
+                  rel={isExternalUrl(link.url) ? "noreferrer" : undefined}
                   className="card-container glass-card flex w-full items-center justify-center gap-2 rounded-3xl px-6 py-4 font-bold transition hover:bg-primary hover:text-white dark:bg-primary/25 dark:hover:bg-primary"
                 >
                   <span className="tooltip-badge -top-10 rounded-full border border-white/20 bg-white/90 px-3 py-1 text-sm font-medium text-primary shadow-xl backdrop-blur-md dark:bg-slate-800 dark:text-inverse-primary">
@@ -250,18 +245,4 @@ export function PortalHome() {
       </div>
     </main>
   );
-}
-
-function normalizeUrl(url: string) {
-  if (!url || url === "#") return "#";
-  if (/^(https?:|mailto:|tel:)/i.test(url)) return url;
-  return `https://${url}`;
-}
-
-function displayUrl(url: string) {
-  return normalizeUrl(url).replace(/^https?:\/\//, "");
-}
-
-function hasUsableUrl(url: string) {
-  return Boolean(url && url.trim() && url.trim() !== "#");
 }

@@ -11,6 +11,7 @@ export function LoginForm({ redirectTo = "/admin" }: { redirectTo?: string }) {
   const [darkMode, setDarkMode] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showDefaultHint, setShowDefaultHint] = useState(false);
 
   useEffect(() => {
     const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
@@ -18,6 +19,11 @@ export function LoginForm({ redirectTo = "/admin" }: { redirectTo?: string }) {
     const nextDark = saved ? saved === "dark" : prefersDark;
     setDarkMode(nextDark);
     document.documentElement.classList.toggle("dark", nextDark);
+
+    fetch("/api/admin/session")
+      .then((response) => response.json())
+      .then((config: { showDefaultCredentialsHint?: boolean }) => setShowDefaultHint(Boolean(config.showDefaultCredentialsHint)))
+      .catch(() => undefined);
   }, []);
 
   async function submit(event: React.FormEvent) {
@@ -81,9 +87,11 @@ export function LoginForm({ redirectTo = "/admin" }: { redirectTo?: string }) {
             </div>
           </label>
 
-          <p className="rounded-2xl bg-primary/10 px-4 py-3 text-sm font-medium text-primary dark:text-inverse-primary">
-            默认后台账号为 <code>admin</code>，密码为 <code>124</code>。也可以通过 <code>ADMIN_EMAIL</code> 和 <code>ADMIN_PASSWORD</code> 覆盖。
-          </p>
+          {showDefaultHint && (
+            <p className="rounded-2xl bg-primary/10 px-4 py-3 text-sm font-medium text-primary dark:text-inverse-primary">
+              本地开发默认后台账号为 <code>admin</code>，密码为 <code>124</code>。也可以通过 <code>ADMIN_EMAIL</code> 和 <code>ADMIN_PASSWORD</code> 覆盖。
+            </p>
+          )}
           {error && <p className="rounded-2xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600">{error}</p>}
 
           <button disabled={loading} className="h-12 w-full rounded-full bg-primary px-8 font-bold text-white transition hover:brightness-110 active:scale-[0.98]" type="submit">
