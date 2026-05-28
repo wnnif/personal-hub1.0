@@ -166,9 +166,10 @@ export function PortalHome() {
               href="https://github.com/wnnif/personal-hub1.0"
               target="_blank"
               rel="noreferrer"
-              className="w-full border-t border-outline-variant/20 pt-8 text-center text-sm text-outline transition hover:text-primary dark:text-outline-variant dark:hover:text-inverse-primary lg:text-left"
-              dangerouslySetInnerHTML={{ __html: data.profile.footerText }}
-            />
+              className="w-full whitespace-pre-line border-t border-outline-variant/20 pt-8 text-center text-sm text-outline transition hover:text-primary dark:text-outline-variant dark:hover:text-inverse-primary lg:text-left"
+            >
+              {data.profile.footerText}
+            </a>
           </section>
         </aside>
 

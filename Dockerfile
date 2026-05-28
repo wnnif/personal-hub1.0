@@ -6,7 +6,8 @@ RUN npm ci
 FROM node:22-alpine AS builder
 WORKDIR /app
 ENV NEXT_TELEMETRY_DISABLED=1
-ENV DATABASE_URL="postgresql://wnn:change_me@db:5432/wnn_portal?schema=public"
+# prisma generate 期间不连库，仅根据 schema 生成 client；DATABASE_URL 由运行时容器注入。
+ENV DATABASE_URL="postgresql://placeholder:placeholder@placeholder:5432/placeholder?schema=public"
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN npx prisma generate

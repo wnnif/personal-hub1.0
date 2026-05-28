@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 const COOKIE_NAME = "wnn_admin_session";
 const SESSION_TTL_SECONDS = 60 * 60 * 24 * 7;
+const DEV_FALLBACK_SECRET = "dev-insecure-session-secret";
 
 export function adminEmail() {
   return process.env.ADMIN_EMAIL || "admin";
@@ -20,6 +21,14 @@ export function verifyAdminCredentials(email: string, password: string) {
 
   const expectedPassword = process.env.ADMIN_PASSWORD || "124";
   return timingSafeEqual(password, expectedPassword);
+}
+
+/**
+ * 是否仍在使用默认弱口令（admin / 124）。
+ * 用于在登录后强制提示用户修改默认密码。
+ */
+export function isUsingDefaultPassword() {
+  return !process.env.ADMIN_PASSWORD_SHA256 && !process.env.ADMIN_PASSWORD;
 }
 
 export function isAuthenticated(request: NextRequest) {
@@ -81,13 +90,67 @@ export function requireAdmin(request: NextRequest) {
   return null;
 }
 
+/**
+ * CSRF 防护：拒绝跨站发起的写请求。
+ * - 必须带 Origin 或 Referer，且与请求 Host 同源。
+ * - 缺失或不匹配时返回 403。
+ *
+ * 与 SameSite=Lax cookie 配合，构成纵深防御。
+ */
+export function requireSameOrigin(request: NextRequest) {
+  const host = request.headers.get("host");
+  if (!host) {
+    return NextResponse.json({ error: "缺少 Host 头" }, { status: 400 });
+  }
+
+  const origin = request.headers.get("origin");
+  const referer = request.headers.get("referer");
+  const source = origin ?? referer;
+  if (!source) {
+    return NextResponse.json({ error: "拒绝跨站请求" }, { status: 403 });
+  }
+
+  try {
+    const sourceHost = new URL(source).host;
+    if (sourceHost !== host) {
+      return NextResponse.json({ error: "拒绝跨站请求" }, { status: 403 });
+    }
+  } catch {
+    return NextResponse.json({ error: "拒绝跨站请求" }, { status: 403 });
+  }
+
+  return null;
+}
+
 function sign(payload: string) {
   return crypto.createHmac("sha256", sessionSecret()).update(payload).digest("base64url");
 }
 
 function sessionSecret() {
-  return process.env.ADMIN_SESSION_SECRET || process.env.NEXTAUTH_SECRET || "dev-insecure-session-secret";
+  const secret = process.env.ADMIN_SESSION_SECRET || process.env.NEXTAUTH_SECRET;
+  if (secret) {
+    if (process.env.NODE_ENV === "production" && secret.length < 32) {
+      throw new Error("ADMIN_SESSION_SECRET 长度不能低于 32，请使用强随机字符串。");
+    }
+    return secret;
+  }
+
+  // 生产环境必须显式设置 secret，否则任何看过本仓库代码的人都能伪造管理员 session。
+  if (process.env.NODE_ENV === "production") {
+    throw new Error("ADMIN_SESSION_SECRET 未设置。请在 .env 中配置一个长度 >= 32 的随机字符串后再启动生产环境。");
+  }
+
+  // 仅开发环境允许使用占位 secret，并在控制台打印明显警告。
+  if (!warnedDevSecret) {
+    warnedDevSecret = true;
+    console.warn(
+      "[auth] 警告: 当前使用开发环境占位 secret，生产环境请务必设置 ADMIN_SESSION_SECRET。"
+    );
+  }
+  return DEV_FALLBACK_SECRET;
 }
+
+let warnedDevSecret = false;
 
 function sha256(value: string) {
   return crypto.createHash("sha256").update(value).digest("hex");
