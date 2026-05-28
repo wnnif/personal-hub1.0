@@ -5,6 +5,7 @@ import { defaultDataset } from "@/lib/default-data";
 import { loadPortalDataset, saveSettings } from "@/lib/portal-store";
 import type { SiteSettings, ThemeMode } from "@/lib/types";
 import { Input } from "./LinksManager";
+import { Icon } from "@/components/Icon";
 
 export function SettingsPanel() {
   const [settings, setSettings] = useState<SiteSettings>(defaultDataset.settings);
@@ -25,7 +26,7 @@ export function SettingsPanel() {
     <form onSubmit={submit} className="space-y-6">
       <section className="glass-card rounded-[2rem] p-6">
         <div className="mb-6 flex items-center gap-3">
-          <span className="material-symbols-outlined flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary dark:text-inverse-primary">language</span>
+          <Icon name="language" className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary dark:text-inverse-primary" />
           <div>
             <h2 className="text-2xl font-bold">站点配置</h2>
             <p className="text-sm text-outline">全局标题和 SEO 描述。</p>
@@ -50,7 +51,7 @@ export function SettingsPanel() {
 
       <section className="glass-card rounded-[2rem] p-6">
         <div className="mb-6 flex items-center gap-3">
-          <span className="material-symbols-outlined flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary dark:text-inverse-primary">palette</span>
+          <Icon name="palette" className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary dark:text-inverse-primary" />
           <div>
             <h2 className="text-2xl font-bold">主题配置</h2>
             <p className="text-sm text-outline">新访客首次打开时使用的默认外观。</p>
@@ -66,7 +67,7 @@ export function SettingsPanel() {
                 settings.defaultTheme === mode ? "bg-primary text-white shadow-lg shadow-primary/20" : "bg-white/50 hover:bg-white/70 dark:bg-white/5 dark:hover:bg-white/10"
               }`}
             >
-              <span className="material-symbols-outlined mb-8 block">{mode === "system" ? "desktop_windows" : mode === "light" ? "light_mode" : "dark_mode"}</span>
+              <Icon name={String(mode === "system" ? "desktop_windows" : mode === "light" ? "light_mode" : "dark_mode")} className="mb-8 block" />
               {mode === "system" ? "跟随系统" : mode === "light" ? "浅色" : "深色"}
             </button>
           ))}
@@ -75,7 +76,7 @@ export function SettingsPanel() {
 
       <div className="flex justify-end">
         <button type="submit" className="flex items-center gap-2 rounded-full bg-primary px-8 py-4 font-bold text-white shadow-lg shadow-primary/20">
-          <span className="material-symbols-outlined text-[20px]">save</span>
+          <Icon name="save" className="text-[20px]" />
           {saved ? "已保存" : "保存修改"}
         </button>
       </div>

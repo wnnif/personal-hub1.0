@@ -5,6 +5,7 @@ import { defaultDataset } from "@/lib/default-data";
 import { loadPortalDataset, saveProfile, uploadAvatar } from "@/lib/portal-store";
 import type { FeaturedLink, Profile, SocialLink } from "@/lib/types";
 import { Input } from "./LinksManager";
+import { Icon } from "@/components/Icon";
 
 export function ProfileSettings() {
   const [profile, setProfile] = useState<Profile>(defaultDataset.profile);
@@ -80,7 +81,7 @@ export function ProfileSettings() {
             <h2 className="text-2xl font-bold">身份信息</h2>
             <p className="text-sm text-outline">这些内容会显示在前台左侧个人信息卡里。</p>
             <label className="mt-4 inline-flex cursor-pointer items-center gap-2 rounded-full bg-primary px-5 py-3 text-sm font-bold text-white transition active:scale-[0.98]">
-              <span className="material-symbols-outlined text-[20px]">upload</span>
+              <Icon name="upload" className="text-[20px]" />
               {uploading ? "上传中..." : "上传本地头像"}
               <input type="file" accept="image/*" className="hidden" onChange={handleAvatarUpload} disabled={uploading} />
             </label>
@@ -158,7 +159,7 @@ export function ProfileSettings() {
 
       <div className="sticky bottom-5 flex justify-end">
         <button type="submit" className="flex items-center gap-2 rounded-full bg-primary px-8 py-4 font-bold text-white shadow-lg shadow-primary/20">
-          <span className="material-symbols-outlined text-[20px]">save</span>
+          <Icon name="save" className="text-[20px]" />
           {saved ? "已保存" : "保存修改"}
         </button>
       </div>

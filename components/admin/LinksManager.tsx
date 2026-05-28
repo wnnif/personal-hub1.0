@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { defaultDataset } from "@/lib/default-data";
 import { deleteLink, loadPortalDataset, saveLink } from "@/lib/portal-store";
 import type { Category, PortalDataset, PortalLink } from "@/lib/types";
+import { Icon } from "@/components/Icon";
 
 const emptyLink: PortalLink = {
   id: "",
@@ -73,7 +74,7 @@ export function LinksManager() {
       <section className="glass-card rounded-[2rem] p-5">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div className="flex flex-1 items-center gap-3 rounded-2xl bg-white/60 px-4 py-3 dark:bg-white/5">
-            <span className="material-symbols-outlined text-[20px] text-outline">search</span>
+            <Icon name="search" className="text-[20px] text-outline" />
             <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="搜索链接..." className="w-full border-0 bg-transparent p-0 focus:ring-0" />
           </div>
           <select value={filter} onChange={(event) => setFilter(event.target.value)} className="rounded-2xl border-0 bg-white/60 px-4 py-3 font-semibold dark:bg-slate-900">
@@ -82,7 +83,7 @@ export function LinksManager() {
             ))}
           </select>
           <button type="button" onClick={newLink} className="flex items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 font-bold text-white transition active:scale-[0.98]">
-            <span className="material-symbols-outlined text-[20px]">add</span>
+            <Icon name="add" className="text-[20px]" />
             新增链接
           </button>
         </div>
@@ -99,11 +100,11 @@ export function LinksManager() {
         {visibleLinks.map((link, index) => (
           <div key={link.id} className="grid gap-4 border-b border-outline-variant/20 px-6 py-5 last:border-0 md:grid-cols-[64px_1.4fr_1fr_120px_120px] md:items-center">
             <div className="flex items-center gap-2 text-outline">
-              <span className="material-symbols-outlined text-[20px]">drag_indicator</span>
+              <Icon name="drag_indicator" className="text-[20px]" />
               {index + 1}
             </div>
             <div className="flex items-center gap-4">
-              <span className="material-symbols-outlined flex h-11 w-11 items-center justify-center rounded-2xl bg-primary/10 text-primary dark:text-inverse-primary">{link.icon}</span>
+              <Icon name={String(link.icon)} className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary/10 text-primary dark:text-inverse-primary" />
               <div>
                 <div className="font-bold">{link.title}</div>
                 <div className="break-all text-sm text-outline">{link.url}</div>
@@ -121,10 +122,10 @@ export function LinksManager() {
             </button>
             <div className="flex gap-2">
               <button onClick={() => setEditing(link)} className="flex h-10 w-10 items-center justify-center rounded-full bg-white/60 text-primary dark:bg-white/5 dark:text-inverse-primary">
-                <span className="material-symbols-outlined text-[20px]">edit</span>
+                <Icon name="edit" className="text-[20px]" />
               </button>
               <button onClick={() => remove(link.id)} className="flex h-10 w-10 items-center justify-center rounded-full bg-red-500/10 text-red-600">
-                <span className="material-symbols-outlined text-[20px]">delete</span>
+                <Icon name="delete" className="text-[20px]" />
               </button>
             </div>
           </div>
@@ -172,7 +173,7 @@ export function EditorModal({ title, children, onClose, onSubmit }: { title: str
         <div className="mb-6 flex items-center justify-between">
           <h2 className="text-2xl font-bold">{title}</h2>
           <button type="button" onClick={onClose} className="flex h-10 w-10 items-center justify-center rounded-full bg-white/60 dark:bg-white/5">
-            <span className="material-symbols-outlined">close</span>
+            <Icon name="close" />
           </button>
         </div>
         {children}

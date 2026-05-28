@@ -5,6 +5,7 @@ import { defaultDataset } from "@/lib/default-data";
 import { deleteCategory, loadPortalDataset, saveCategory } from "@/lib/portal-store";
 import type { Category, PortalDataset } from "@/lib/types";
 import { EditorModal, Input } from "./LinksManager";
+import { Icon } from "@/components/Icon";
 
 const emptyCategory: Category = { id: "", name: "", icon: "category", sortOrder: 1, isActive: true };
 
@@ -42,7 +43,7 @@ export function CategoriesManager() {
     <div className="space-y-6">
       <div className="flex justify-end">
         <button onClick={() => setEditing({ ...emptyCategory, sortOrder: data.categories.length + 1 })} className="flex items-center gap-2 rounded-full bg-primary px-6 py-3 font-bold text-white">
-          <span className="material-symbols-outlined text-[20px]">add</span>
+          <Icon name="add" className="text-[20px]" />
           新增分类
         </button>
       </div>
@@ -53,13 +54,13 @@ export function CategoriesManager() {
           return (
             <section key={category.id} className="glass-card rounded-[2rem] p-6">
               <div className="mb-6 flex items-start justify-between">
-                <span className="material-symbols-outlined flex h-14 w-14 items-center justify-center rounded-3xl bg-primary/10 text-primary dark:text-inverse-primary">{category.icon}</span>
+                <Icon name={String(category.icon)} className="flex h-14 w-14 items-center justify-center rounded-3xl bg-primary/10 text-primary dark:text-inverse-primary" />
                 <div className="flex gap-2">
                   <button onClick={() => setEditing(category)} className="flex h-10 w-10 items-center justify-center rounded-full bg-white/60 text-primary dark:bg-white/5 dark:text-inverse-primary">
-                    <span className="material-symbols-outlined text-[20px]">edit</span>
+                    <Icon name="edit" className="text-[20px]" />
                   </button>
                   <button onClick={() => remove(category.id)} className="flex h-10 w-10 items-center justify-center rounded-full bg-red-500/10 text-red-600">
-                    <span className="material-symbols-outlined text-[20px]">delete</span>
+                    <Icon name="delete" className="text-[20px]" />
                   </button>
                 </div>
               </div>

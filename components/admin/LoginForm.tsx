@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { Icon } from "@/components/Icon";
 
 export function LoginForm({ redirectTo = "/admin" }: { redirectTo?: string }) {
   const router = useRouter();
@@ -60,14 +61,14 @@ export function LoginForm({ redirectTo = "/admin" }: { redirectTo?: string }) {
       <section className="glass-card w-full max-w-md rounded-[2rem] p-8">
         <div className="mb-8 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <span className="material-symbols-outlined flex h-12 w-12 items-center justify-center rounded-2xl bg-primary text-white">admin_panel_settings</span>
+            <Icon name="admin_panel_settings" className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary text-white" />
             <div>
               <h1 className="text-2xl font-bold">Wnn Portal</h1>
               <p className="text-sm text-on-surface-variant dark:text-outline-variant">输入账号密码进入管理后台。</p>
             </div>
           </div>
           <button onClick={toggleTheme} className="flex h-10 w-10 items-center justify-center rounded-full glass-card text-primary dark:text-inverse-primary" type="button">
-            <span className="material-symbols-outlined">{darkMode ? "light_mode" : "dark_mode"}</span>
+            <Icon name={String(darkMode ? "light_mode" : "dark_mode")} />
           </button>
         </div>
 
@@ -75,14 +76,14 @@ export function LoginForm({ redirectTo = "/admin" }: { redirectTo?: string }) {
           <label className="block">
             <span className="mb-2 block text-sm font-semibold">账号</span>
             <div className="flex items-center gap-3 rounded-2xl bg-white/60 px-4 py-3 dark:bg-white/5">
-              <span className="material-symbols-outlined text-[20px] text-outline">person</span>
+              <Icon name="person" className="text-[20px] text-outline" />
               <input value={email} onChange={(event) => setEmail(event.target.value)} className="w-full border-0 bg-transparent p-0 focus:ring-0" type="text" placeholder="admin" />
             </div>
           </label>
           <label className="block">
             <span className="mb-2 block text-sm font-semibold">密码</span>
             <div className="flex items-center gap-3 rounded-2xl bg-white/60 px-4 py-3 dark:bg-white/5">
-              <span className="material-symbols-outlined text-[20px] text-outline">lock</span>
+              <Icon name="lock" className="text-[20px] text-outline" />
               <input value={password} onChange={(event) => setPassword(event.target.value)} className="w-full border-0 bg-transparent p-0 focus:ring-0" type="password" placeholder="请输入密码" />
             </div>
           </label>

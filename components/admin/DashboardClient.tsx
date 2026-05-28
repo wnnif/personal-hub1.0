@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { loadPortalDataset } from "@/lib/portal-store";
 import { defaultDataset } from "@/lib/default-data";
 import type { PortalDataset } from "@/lib/types";
+import { Icon } from "@/components/Icon";
 
 type VisitStats = {
   todayVisitors: number;
@@ -42,7 +43,7 @@ export function DashboardClient() {
           <section key={stat.label} className="glass-card rounded-[2rem] p-6">
             <div className="mb-6 flex items-center justify-between">
               <span className="text-sm font-semibold text-on-surface-variant dark:text-outline-variant">{stat.label}</span>
-              <span className="material-symbols-outlined flex h-11 w-11 items-center justify-center rounded-2xl bg-primary/10 text-primary dark:text-inverse-primary">{stat.icon}</span>
+              <Icon name={String(stat.icon)} className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary/10 text-primary dark:text-inverse-primary" />
             </div>
             <div className="text-4xl font-bold">{stat.value}</div>
             <div className="mt-3 text-sm font-semibold text-primary dark:text-inverse-primary">{stat.delta}</div>
@@ -56,7 +57,7 @@ export function DashboardClient() {
             <h2 className="text-xl font-bold">每日访问</h2>
             <p className="text-sm text-outline">最近 14 天的浏览器去重访问统计。</p>
           </div>
-          <span className="material-symbols-outlined flex h-11 w-11 items-center justify-center rounded-2xl bg-primary/10 text-primary dark:text-inverse-primary">bar_chart</span>
+          <Icon name="bar_chart" className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary/10 text-primary dark:text-inverse-primary" />
         </div>
         <div className="flex h-40 items-end gap-2">
           {visits.dailyVisits.map((item) => (
@@ -80,7 +81,7 @@ export function DashboardClient() {
           {data.links.slice(0, 5).map((link) => (
             <div key={link.id} className="flex items-center justify-between gap-4 py-4">
               <div className="flex items-center gap-4">
-                <span className="material-symbols-outlined flex h-11 w-11 items-center justify-center rounded-2xl bg-white/60 text-primary dark:bg-white/5 dark:text-inverse-primary">{link.icon}</span>
+                <Icon name={String(link.icon)} className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/60 text-primary dark:bg-white/5 dark:text-inverse-primary" />
                 <div>
                   <div className="font-semibold">{link.title}</div>
                   <div className="text-sm text-outline">{link.categoryName}</div>

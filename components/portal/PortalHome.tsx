@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import type { PortalDataset } from "@/lib/types";
 import { displayUrl, hasUsableUrl, isExternalUrl, normalizeUrl } from "@/lib/url";
+import { Icon } from "@/components/Icon";
 
 export function PortalHome({ initialData }: { initialData: PortalDataset }) {
   const [data] = useState<PortalDataset>(initialData);
@@ -96,7 +97,7 @@ export function PortalHome({ initialData }: { initialData: PortalDataset }) {
           className="flex h-10 w-10 items-center justify-center rounded-full text-primary transition hover:bg-white/40 dark:text-inverse-primary dark:hover:bg-white/10"
           aria-label="切换明暗模式"
         >
-          <span className="material-symbols-outlined">{darkMode ? "light_mode" : "dark_mode"}</span>
+          <Icon name={String(darkMode ? "light_mode" : "dark_mode")} />
         </button>
       </nav>
 
@@ -134,7 +135,7 @@ export function PortalHome({ initialData }: { initialData: PortalDataset }) {
                   <span className="tooltip-badge -top-10 rounded-full border border-white/20 bg-white/90 px-3 py-1 text-sm font-medium text-primary shadow-xl backdrop-blur-md dark:bg-slate-800 dark:text-inverse-primary">
                     {social.label}
                   </span>
-                  <span className="material-symbols-outlined text-[20px]">{social.icon}</span>
+                  <Icon name={String(social.icon)} className="text-[20px]" />
                 </a>
               ))}
             </div>
@@ -151,7 +152,7 @@ export function PortalHome({ initialData }: { initialData: PortalDataset }) {
                   <span className="tooltip-badge -top-10 rounded-full border border-white/20 bg-white/90 px-3 py-1 text-sm font-medium text-primary shadow-xl backdrop-blur-md dark:bg-slate-800 dark:text-inverse-primary">
                     {link.hint}
                   </span>
-                  <span className="material-symbols-outlined text-[24px]">{link.icon}</span>
+                  <Icon name={String(link.icon)} className="text-[24px]" />
                   {link.label}
                 </a>
               ))}
@@ -172,7 +173,7 @@ export function PortalHome({ initialData }: { initialData: PortalDataset }) {
           <div className="glass-card mb-16 flex flex-col items-center rounded-3xl border border-white/40 p-1.5 shadow-lg focus-within:ring-4 focus-within:ring-primary-container/20 dark:border-white/5 md:flex-row">
             <div className="flex w-full items-center justify-between gap-2 rounded-2xl px-6 py-3 font-medium md:w-44">
               <span className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-[20px] text-primary dark:text-inverse-primary">{selectedEngine.icon}</span>
+                <Icon name={String(selectedEngine.icon)} className="text-[20px] text-primary dark:text-inverse-primary" />
                 <select value={searchEngine} onChange={(event) => setSearchEngine(event.target.value)} className="border-0 bg-transparent p-0 text-sm font-semibold focus:ring-0 dark:bg-transparent">
                   {data.searchEngines.map((engine) => (
                     <option key={engine.name}>{engine.name}</option>
@@ -221,7 +222,7 @@ export function PortalHome({ initialData }: { initialData: PortalDataset }) {
                 <div className="glass-card group relative rounded-3xl p-6 pt-12 transition duration-300 hover:-translate-y-1.5 hover:shadow-2xl">
                   <div className="mb-3 flex items-center gap-6">
                     <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/5 text-primary shadow-sm transition group-hover:bg-primary group-hover:text-white dark:bg-white/5 dark:text-inverse-primary">
-                      <span className="material-symbols-outlined text-[24px]">{item.icon}</span>
+                      <Icon name={String(item.icon)} className="text-[24px]" />
                     </div>
                     <div>
                       <h2 className="text-2xl font-semibold transition group-hover:text-primary dark:group-hover:text-inverse-primary">{item.title}</h2>
@@ -231,9 +232,7 @@ export function PortalHome({ initialData }: { initialData: PortalDataset }) {
                   <p className="line-clamp-2 text-[17px] leading-7 text-on-surface-variant dark:text-outline-variant">{item.description}</p>
                   <div className="pointer-events-none absolute left-1/2 top-4 max-w-[calc(100%-3rem)] -translate-x-1/2 -translate-y-1 opacity-0 transition duration-300 group-hover:translate-y-0 group-hover:opacity-100">
                     <div className="inline-flex max-w-full items-center gap-1 rounded-full border border-primary-container/10 bg-white/90 px-3 py-1.5 text-sm font-bold text-primary shadow-lg backdrop-blur-xl dark:border-white/10 dark:bg-slate-900/90 dark:text-inverse-primary">
-                      <span className="material-symbols-outlined text-[16px]" aria-hidden="true">
-                        language
-                      </span>
+                      <Icon name="language" className="text-[16px]" />
                       <span className="truncate">{displayUrl(item.url)}</span>
                     </div>
                   </div>

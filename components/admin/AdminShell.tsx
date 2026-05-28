@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { Icon } from "@/components/Icon";
 
 const navItems = [
   { href: "/admin/dashboard", label: "仪表盘", icon: "dashboard" },
@@ -65,7 +66,7 @@ export function AdminShell({ title, description, children }: { title: string; de
       <div className="animated-bg" />
       <aside className="fixed left-0 top-0 z-40 hidden h-screen w-72 border-r border-white/30 bg-white/30 p-6 backdrop-blur-2xl dark:border-white/5 dark:bg-black/20 lg:block">
         <div className="mb-10 flex items-center gap-3">
-          <span className="material-symbols-outlined flex h-11 w-11 items-center justify-center rounded-2xl bg-primary text-white">admin_panel_settings</span>
+          <Icon name="admin_panel_settings" className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary text-white" />
           <div>
             <div className="font-bold">Wnn Portal</div>
             <div className="text-xs font-semibold uppercase tracking-[0.18em] text-outline">管理后台</div>
@@ -83,7 +84,7 @@ export function AdminShell({ title, description, children }: { title: string; de
                   active ? "bg-primary text-white shadow-lg shadow-primary/20" : "hover:bg-white/50 dark:hover:bg-white/10"
                 }`}
               >
-                <span className="material-symbols-outlined text-[20px]">{item.icon}</span>
+                <Icon name={String(item.icon)} className="text-[20px]" />
                 {item.label}
               </Link>
             );
@@ -92,11 +93,11 @@ export function AdminShell({ title, description, children }: { title: string; de
 
         <div className="absolute bottom-6 left-6 right-6 space-y-2">
           <Link href="/" className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold transition hover:bg-white/50 dark:hover:bg-white/10">
-            <span className="material-symbols-outlined text-[20px]">open_in_new</span>
+            <Icon name="open_in_new" className="text-[20px]" />
             查看前台
           </Link>
           <button onClick={logout} className="flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-red-600 transition hover:bg-red-500/10">
-            <span className="material-symbols-outlined text-[20px]">logout</span>
+            <Icon name="logout" className="text-[20px]" />
             退出登录
           </button>
         </div>
@@ -106,15 +107,15 @@ export function AdminShell({ title, description, children }: { title: string; de
         <header className="sticky top-0 z-30 border-b border-white/30 bg-white/30 px-5 py-4 backdrop-blur-2xl dark:border-white/5 dark:bg-black/20 md:px-10">
           <div className="flex items-center justify-between gap-4">
             <div>
-              <h1 className="text-3xl font-bold tracking-tight">{title}</h1>
+              <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">{title}</h1>
               <p className="mt-1 text-sm text-on-surface-variant dark:text-outline-variant">{description}</p>
             </div>
             <div className="flex items-center gap-2">
               <button onClick={toggleTheme} className="flex h-11 w-11 items-center justify-center rounded-full glass-card text-primary dark:text-inverse-primary" aria-label="切换明暗模式">
-                <span className="material-symbols-outlined">{darkMode ? "light_mode" : "dark_mode"}</span>
+                <Icon name={String(darkMode ? "light_mode" : "dark_mode")} />
               </button>
               <Link href="/" className="flex h-11 w-11 items-center justify-center rounded-full glass-card lg:hidden" aria-label="查看前台">
-                <span className="material-symbols-outlined">open_in_new</span>
+                <Icon name="open_in_new" />
               </Link>
             </div>
           </div>
@@ -123,18 +124,18 @@ export function AdminShell({ title, description, children }: { title: string; de
         <div className="mx-auto max-w-7xl px-5 pb-28 pt-8 md:px-10 lg:pb-8">{children}</div>
       </div>
 
-      <nav className="fixed bottom-4 left-4 right-4 z-40 grid grid-cols-5 gap-1 rounded-[2rem] border border-white/30 bg-white/80 p-2 shadow-2xl backdrop-blur-2xl dark:border-white/10 dark:bg-slate-950/80 lg:hidden">
+      <nav className="fixed bottom-3 left-2 right-2 z-40 grid grid-cols-5 gap-1 rounded-[1.75rem] border border-white/30 bg-white/90 p-1.5 shadow-2xl backdrop-blur-2xl dark:border-white/10 dark:bg-slate-950/90 sm:bottom-4 sm:left-4 sm:right-4 sm:rounded-[2rem] sm:p-2 lg:hidden">
         {navItems.map((item) => {
           const active = pathname === item.href;
           return (
             <Link
               key={item.href}
               href={item.href}
-              className={`flex min-w-0 flex-col items-center justify-center gap-1 rounded-3xl px-2 py-2 text-[11px] font-semibold transition ${
+              className={`flex min-w-0 flex-col items-center justify-center gap-0.5 rounded-2xl px-1 py-2 text-[10px] font-semibold transition sm:gap-1 sm:rounded-3xl sm:px-2 sm:text-[11px] ${
                 active ? "bg-primary text-white shadow-lg shadow-primary/20" : "text-on-surface-variant hover:bg-white/60 dark:text-outline-variant dark:hover:bg-white/10"
               }`}
             >
-              <span className="material-symbols-outlined text-[20px]">{item.icon}</span>
+              <Icon name={String(item.icon)} className="text-[20px]" />
               <span className="truncate">{item.label}</span>
             </Link>
           );
