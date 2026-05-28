@@ -15,7 +15,7 @@ curl -fsSL https://raw.githubusercontent.com/wnnif/personal-hub1.0/main/scripts/
 Customize the install path and initial admin password:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/wnnif/personal-hub1.0/main/scripts/install.sh | INSTALL_DIR=/opt/personal-hub ADMIN_PASSWORD='your-password' bash
+curl -fsSL https://raw.githubusercontent.com/wnnif/personal-hub1.0/main/scripts/install.sh | INSTALL_DIR=/opt/personal-hub APP_PORT=3017 ADMIN_PASSWORD='your-password' bash
 ```
 
 Update later:
@@ -77,6 +77,7 @@ http://SERVER_IP:3000/admin
 The app container runs these automatically during startup:
 
 ```bash
+npx prisma generate
 npx prisma migrate deploy
 npx prisma db seed
 ```

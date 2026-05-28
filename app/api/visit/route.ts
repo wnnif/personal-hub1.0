@@ -15,12 +15,11 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: false, reason: "rate_limited" }, { status: 429 });
   }
 
-  const body = (await request.json().catch(() => ({}))) as { date?: string };
-  const date = /^\d{4}-\d{2}-\d{2}$/.test(body.date ?? "") ? body.date! : todayKey();
+  await request.json().catch(() => ({}));
 
   try {
-    // DB 唯一索引 (date, ipHash) 做每日去重；多实例/重启后也不会重复计数。
-    await recordVisit(date, ip);
+    // 使用服务器日期，避免客户端伪造 date 刷历史统计。
+    await recordVisit(todayKey(), ip);
     return NextResponse.json({ ok: true });
   } catch {
     return NextResponse.json({ ok: false, mode: "preview" });

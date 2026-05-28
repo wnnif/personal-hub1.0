@@ -98,7 +98,7 @@ export function ProfileSettings() {
             <textarea value={profile.bio} onChange={(event) => setProfile({ ...profile, bio: event.target.value })} maxLength={160} className="min-h-28 w-full rounded-2xl border-0 bg-white/60 px-4 py-3 focus:ring-2 focus:ring-primary dark:bg-white/5" />
             <span className="mt-1 block text-xs font-semibold text-outline">{profile.bio.length} / 160 字</span>
           </label>
-          <Input label="页脚 HTML" value={profile.footerText} onChange={(footerText) => setProfile({ ...profile, footerText })} className="md:col-span-2" />
+          <Input label="页脚文案" value={profile.footerText} onChange={(footerText) => setProfile({ ...profile, footerText })} className="md:col-span-2" />
         </div>
       </section>
 

@@ -33,10 +33,10 @@ Personal Hub 1.0 是一个开源、自托管的个人导航站，内置后台管
 curl -fsSL https://raw.githubusercontent.com/wnnif/personal-hub1.0/main/scripts/install.sh | bash
 ```
 
-可自定义安装目录和默认后台密码：
+可自定义安装目录、端口和默认后台密码：
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/wnnif/personal-hub1.0/main/scripts/install.sh | INSTALL_DIR=/opt/personal-hub ADMIN_PASSWORD='你的密码' bash
+curl -fsSL https://raw.githubusercontent.com/wnnif/personal-hub1.0/main/scripts/install.sh | INSTALL_DIR=/opt/personal-hub APP_PORT=3017 ADMIN_PASSWORD='你的密码' bash
 ```
 
 ## 一键更新
@@ -68,10 +68,10 @@ docker compose up -d --build
 
 ```bash
 ADMIN_EMAIL="admin"
-ADMIN_PASSWORD="124"
+ADMIN_PASSWORD="change_this_admin_password"
 ```
 
-这些默认值是为了本地快速体验。公开部署前建议修改 `ADMIN_PASSWORD`、`POSTGRES_PASSWORD`、`ADMIN_SESSION_SECRET` 和 `VISIT_HASH_SALT`。
+`.env.example` 使用占位值；公开部署前必须修改 `ADMIN_PASSWORD`、`POSTGRES_PASSWORD`、`ADMIN_SESSION_SECRET` 和 `VISIT_HASH_SALT`，或使用一键安装脚本自动生成强随机值。
 
 生产环境登录页默认不会展示 `admin / 124` 提示；如果你要做公开演示，可显式设置：
 
@@ -107,14 +107,15 @@ npm run dev
 ## 环境变量
 
 ```bash
-DATABASE_URL="postgresql://wnn:please_change_me@db:5432/wnn_portal?schema=public"
+APP_PORT="3000"
+DATABASE_URL="postgresql://wnn:change_this_postgres_password@db:5432/wnn_portal?schema=public"
 POSTGRES_DB="wnn_portal"
 POSTGRES_USER="wnn"
-POSTGRES_PASSWORD="please_change_me"
+POSTGRES_PASSWORD="change_this_postgres_password"
 ADMIN_EMAIL="admin"
-ADMIN_PASSWORD="124"
-ADMIN_SESSION_SECRET="please_change_this_session_secret"
-VISIT_HASH_SALT="please_change_this_visit_hash_salt"
+ADMIN_PASSWORD="change_this_admin_password"
+ADMIN_SESSION_SECRET="change_this_to_a_long_random_session_secret"
+VISIT_HASH_SALT="change_this_to_a_long_random_visit_hash_salt"
 NEXT_PUBLIC_SHOW_DEFAULT_CREDENTIALS="false"
 ```
 

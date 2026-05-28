@@ -53,6 +53,8 @@ make_env() {
   visit_salt="$(openssl rand -hex 32)"
 
   cat > .env <<ENV
+APP_PORT="${APP_PORT}"
+
 POSTGRES_DB="wnn_portal"
 POSTGRES_USER="wnn"
 POSTGRES_PASSWORD="${db_pass}"
