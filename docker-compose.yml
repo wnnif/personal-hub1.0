@@ -17,7 +17,7 @@ services:
     environment:
       POSTGRES_DB: ${POSTGRES_DB:?POSTGRES_DB 必须在 .env 中设置}
       POSTGRES_USER: ${POSTGRES_USER:?POSTGRES_USER 必须在 .env 中设置}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD 必须在 .env 中设置（请使用强随机字符串）}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD 必须在 .env 中设置}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:

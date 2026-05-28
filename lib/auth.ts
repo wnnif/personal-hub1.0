@@ -128,16 +128,11 @@ function sign(payload: string) {
 
 function sessionSecret() {
   const secret = process.env.ADMIN_SESSION_SECRET || process.env.NEXTAUTH_SECRET;
-  if (secret) {
-    if (process.env.NODE_ENV === "production" && secret.length < 32) {
-      throw new Error("ADMIN_SESSION_SECRET 长度不能低于 32，请使用强随机字符串。");
-    }
-    return secret;
-  }
+  if (secret) return secret;
 
   // 生产环境必须显式设置 secret，否则任何看过本仓库代码的人都能伪造管理员 session。
   if (process.env.NODE_ENV === "production") {
-    throw new Error("ADMIN_SESSION_SECRET 未设置。请在 .env 中配置一个长度 >= 32 的随机字符串后再启动生产环境。");
+    throw new Error("ADMIN_SESSION_SECRET 未设置。请在 .env 中配置一个会话密钥后再启动生产环境。");
   }
 
   // 仅开发环境允许使用占位 secret，并在控制台打印明显警告。
