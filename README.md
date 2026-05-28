@@ -25,6 +25,32 @@ Personal Hub 1.0 是一个开源、自托管的个人导航站，内置后台管
 - 每日访问人数统计，使用数据库唯一去重并保存 IP 哈希
 - Docker 优先的自托管部署
 
+## 一键安装
+
+适合全新服务器，默认安装到 `/opt/personal-hub1.0`：
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/wnnif/personal-hub1.0/main/scripts/install.sh | bash
+```
+
+可自定义安装目录和默认后台密码：
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/wnnif/personal-hub1.0/main/scripts/install.sh | INSTALL_DIR=/opt/personal-hub ADMIN_PASSWORD='你的密码' bash
+```
+
+## 一键更新
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/wnnif/personal-hub1.0/main/scripts/update.sh | bash
+```
+
+如果安装目录不是默认值：
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/wnnif/personal-hub1.0/main/scripts/update.sh | INSTALL_DIR=/opt/personal-hub bash
+```
+
 ## Docker 快速开始
 
 ```bash

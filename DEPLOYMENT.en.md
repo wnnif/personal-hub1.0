@@ -4,7 +4,33 @@
 
 This project is designed for Docker-first deployment. The recommended production path is Docker Compose with one app container and one PostgreSQL container.
 
-## 1. Prepare Environment
+## 1. One-Command Install / Update
+
+Install on a fresh server:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/wnnif/personal-hub1.0/main/scripts/install.sh | bash
+```
+
+Customize the install path and initial admin password:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/wnnif/personal-hub1.0/main/scripts/install.sh | INSTALL_DIR=/opt/personal-hub ADMIN_PASSWORD='your-password' bash
+```
+
+Update later:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/wnnif/personal-hub1.0/main/scripts/update.sh | bash
+```
+
+If you used a custom install path:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/wnnif/personal-hub1.0/main/scripts/update.sh | INSTALL_DIR=/opt/personal-hub bash
+```
+
+## 2. Prepare Environment
 
 Copy the example file:
 
@@ -35,7 +61,7 @@ Important:
 - `VISIT_HASH_SALT` is used to hash visitor IPs for visit statistics; for public deployments, change it to a server-only value.
 - The production login page does not show the `admin / 124` hint by default. Enable `NEXT_PUBLIC_SHOW_DEFAULT_CREDENTIALS=true` only for demos.
 
-## 2. Deploy With Docker Compose
+## 3. Deploy With Docker Compose
 
 ```bash
 docker compose up -d --build
@@ -57,7 +83,7 @@ npx prisma db seed
 
 The seed script is idempotent. It inserts initial content only when the database has not been initialized.
 
-## 3. Useful Commands
+## 4. Useful Commands
 
 View logs:
 
@@ -90,7 +116,7 @@ Stop and remove database data:
 docker compose down -v
 ```
 
-## 4. Hermes / Dok Docker Compose Deployment
+## 5. Hermes / Dok Docker Compose Deployment
 
 Dok deployment uses Docker Compose. If your server panel can deploy from a Git repository with Docker Compose:
 
@@ -111,7 +137,7 @@ If your panel deploys from a Dockerfile only:
 5. Set `ADMIN_EMAIL`, `ADMIN_PASSWORD`, and `ADMIN_SESSION_SECRET`.
 6. Expose port `3000`.
 
-## 5. Reverse Proxy
+## 6. Reverse Proxy
 
 For Nginx, Caddy, Traefik, Dokploy, or similar tools, proxy traffic to:
 
@@ -121,7 +147,7 @@ http://app:3000
 
 For a single-server Docker Compose setup, map host port `3000` directly or let your panel attach a reverse proxy.
 
-## 6. Backups
+## 7. Backups
 
 The PostgreSQL data is stored in the Docker volume:
 

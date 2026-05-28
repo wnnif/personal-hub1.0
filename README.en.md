@@ -25,6 +25,32 @@ The UI follows the Stitch Aura design package: Apple-like minimalism, glass surf
 - Daily visitor statistics with database-level uniqueness and hashed IPs
 - Docker-first self-hosting
 
+## One-Command Install
+
+For a fresh server. The default install path is `/opt/personal-hub1.0`:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/wnnif/personal-hub1.0/main/scripts/install.sh | bash
+```
+
+Customize the install path and initial admin password:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/wnnif/personal-hub1.0/main/scripts/install.sh | INSTALL_DIR=/opt/personal-hub ADMIN_PASSWORD='your-password' bash
+```
+
+## One-Command Update
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/wnnif/personal-hub1.0/main/scripts/update.sh | bash
+```
+
+If you used a custom install path:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/wnnif/personal-hub1.0/main/scripts/update.sh | INSTALL_DIR=/opt/personal-hub bash
+```
+
 ## Quick Start With Docker
 
 ```bash
