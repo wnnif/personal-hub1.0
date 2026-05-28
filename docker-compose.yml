@@ -15,9 +15,9 @@ services:
   db:
     image: postgres:16-alpine
     environment:
-      POSTGRES_DB: ${POSTGRES_DB:-wnn_portal}
-      POSTGRES_USER: ${POSTGRES_USER:-wnn}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change_me}
+      POSTGRES_DB: ${POSTGRES_DB:?POSTGRES_DB 必须在 .env 中设置}
+      POSTGRES_USER: ${POSTGRES_USER:?POSTGRES_USER 必须在 .env 中设置}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD 必须在 .env 中设置（请使用强随机字符串）}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:

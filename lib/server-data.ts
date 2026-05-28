@@ -1,5 +1,6 @@
 import { defaultDataset } from "./default-data";
 import { prisma } from "./db";
+import { sanitizeFooterText } from "./sanitize";
 import type { Category, FeaturedLink, PortalDataset, PortalLink, Profile, SiteSettings, SocialLink } from "./types";
 
 export async function getPortalDataset(): Promise<PortalDataset> {
@@ -19,9 +20,13 @@ export async function getPortalDataset(): Promise<PortalDataset> {
             name: profile.name,
             bio: profile.bio,
             avatarUrl: profile.avatarUrl,
-            footerText: profile.footerText
+            // 旧数据可能存了 <br /> 等 HTML，统一在读取时清洗为纯文本换行。
+            footerText: sanitizeFooterText(profile.footerText)
           }
-        : defaultDataset.profile,
+        : {
+            ...defaultDataset.profile,
+            footerText: sanitizeFooterText(defaultDataset.profile.footerText)
+          },
       settings: settings
         ? {
             siteTitle: settings.siteTitle,
