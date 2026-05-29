@@ -105,29 +105,6 @@ body {
   transform: translate(-50%, -12px) scale(1);
 }
 
-.masonry {
-  columns: 1;
-  column-gap: 24px;
-}
-
-@media (min-width: 768px) {
-  .masonry {
-    columns: 2;
-  }
-}
-
-@media (min-width: 1280px) {
-  .masonry {
-    columns: 3;
-  }
-}
-
-.masonry-item {
-  break-inside: avoid;
-  display: block;
-  margin-bottom: 32px;
-}
-
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }

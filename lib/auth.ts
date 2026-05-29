@@ -1,4 +1,6 @@
 import crypto from "node:crypto";
+import fs from "node:fs";
+import path from "node:path";
 import { NextRequest, NextResponse } from "next/server";
 import { ADMIN_COOKIE_NAME } from "./auth-constants";
 
@@ -7,7 +9,7 @@ const SESSION_TTL_SECONDS = 60 * 60 * 24 * 7;
 const DEV_FALLBACK_SECRET = "dev-insecure-session-secret";
 
 export function adminEmail() {
-  return process.env.ADMIN_EMAIL || "admin";
+  return authEnv().ADMIN_EMAIL || process.env.ADMIN_EMAIL || "admin";
 }
 
 export function verifyAdminCredentials(email: string, password: string) {
@@ -15,12 +17,13 @@ export function verifyAdminCredentials(email: string, password: string) {
     return false;
   }
 
-  const passwordHash = process.env.ADMIN_PASSWORD_SHA256;
+  const env = authEnv();
+  const passwordHash = env.ADMIN_PASSWORD_SHA256 || process.env.ADMIN_PASSWORD_SHA256;
   if (passwordHash) {
     return timingSafeEqual(sha256(password), passwordHash);
   }
 
-  const expectedPassword = process.env.ADMIN_PASSWORD || "124";
+  const expectedPassword = env.ADMIN_PASSWORD || process.env.ADMIN_PASSWORD || "124";
   return timingSafeEqual(password, expectedPassword);
 }
 
@@ -29,7 +32,8 @@ export function verifyAdminCredentials(email: string, password: string) {
  * 用于在登录后强制提示用户修改默认密码。
  */
 export function isUsingDefaultPassword() {
-  return !process.env.ADMIN_PASSWORD_SHA256 && !process.env.ADMIN_PASSWORD;
+  const env = authEnv();
+  return !env.ADMIN_PASSWORD_SHA256 && !process.env.ADMIN_PASSWORD_SHA256 && !env.ADMIN_PASSWORD && !process.env.ADMIN_PASSWORD;
 }
 
 export function isAuthenticated(request: NextRequest) {
@@ -137,7 +141,8 @@ function sign(payload: string) {
 }
 
 function sessionSecret() {
-  const secret = process.env.ADMIN_SESSION_SECRET || process.env.NEXTAUTH_SECRET;
+  const env = authEnv();
+  const secret = env.ADMIN_SESSION_SECRET || process.env.ADMIN_SESSION_SECRET || process.env.NEXTAUTH_SECRET;
   if (secret) return secret;
 
   // 生产环境必须显式设置 secret，否则任何看过本仓库代码的人都能伪造管理员 session。
@@ -158,10 +163,47 @@ function sessionSecret() {
 let warnedDevSecret = false;
 
 function passwordFingerprint() {
-  const source = process.env.ADMIN_PASSWORD_SHA256
-    ? `sha256:${process.env.ADMIN_PASSWORD_SHA256}`
-    : `plain:${process.env.ADMIN_PASSWORD || "124"}`;
+  const env = authEnv();
+  const passwordHash = env.ADMIN_PASSWORD_SHA256 || process.env.ADMIN_PASSWORD_SHA256;
+  const source = passwordHash
+    ? `sha256:${passwordHash}`
+    : `plain:${env.ADMIN_PASSWORD || process.env.ADMIN_PASSWORD || "124"}`;
   return sha256(source);
+}
+
+function authEnv() {
+  const envPath = path.join(process.cwd(), ".env");
+  try {
+    const stat = fs.statSync(envPath);
+    if (cachedAuthEnv && cachedAuthEnvMtime === stat.mtimeMs) return cachedAuthEnv;
+    const next: Record<string, string> = {};
+    for (const line of fs.readFileSync(envPath, "utf8").split(/\r?\n/)) {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith("#") || !trimmed.includes("=")) continue;
+      const [key, ...rest] = trimmed.split("=");
+      next[key] = unquoteEnv(rest.join("="));
+    }
+    cachedAuthEnv = next;
+    cachedAuthEnvMtime = stat.mtimeMs;
+    return next;
+  } catch {
+    return {};
+  }
+}
+
+let cachedAuthEnv: Record<string, string> | null = null;
+let cachedAuthEnvMtime = 0;
+
+function unquoteEnv(value: string) {
+  const trimmed = value.trim();
+  if ((trimmed.startsWith('"') && trimmed.endsWith('"')) || (trimmed.startsWith("'") && trimmed.endsWith("'"))) {
+    try {
+      return JSON.parse(trimmed);
+    } catch {
+      return trimmed.slice(1, -1);
+    }
+  }
+  return trimmed;
 }
 
 function sha256(value: string) {

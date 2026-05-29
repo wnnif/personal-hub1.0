@@ -63,7 +63,8 @@ export function PortalHome({ initialData }: { initialData: PortalDataset }) {
     () =>
       data.featuredLinks
         .filter((item) => item.isActive && hasUsableUrl(item.url))
-        .sort((a, b) => a.sortOrder - b.sortOrder),
+        .sort((a, b) => a.sortOrder - b.sortOrder)
+        .slice(0, 3),
     [data.featuredLinks]
   );
   const visibleLinks = data.links
@@ -117,9 +118,8 @@ export function PortalHome({ initialData }: { initialData: PortalDataset }) {
             <h1 className="mb-1 text-3xl font-semibold">{data.profile.name}</h1>
             <p className="mb-10 max-w-xs text-[17px] leading-7 text-on-surface-variant dark:text-outline-variant">{data.profile.bio}</p>
 
-            <div className="mb-10 w-full rounded-3xl border border-primary-container/10 bg-primary-container/10 px-10 py-6 text-center font-mono text-primary shadow-sm dark:bg-inverse-primary/10 dark:text-inverse-primary">
-              <div className="mb-1 text-xs font-bold uppercase tracking-[0.2em] opacity-60">本地时间</div>
-              <div className="text-[32px] font-bold leading-none tracking-tight">{time}</div>
+            <div className="mb-8 w-full rounded-3xl border border-primary-container/10 bg-primary-container/10 px-8 py-4 text-center font-mono text-primary shadow-sm dark:bg-inverse-primary/10 dark:text-inverse-primary">
+              <div className="text-[24px] font-bold leading-none tracking-tight">{time}</div>
             </div>
 
             <div className="mb-10 grid w-full grid-cols-4 gap-3">
@@ -140,7 +140,7 @@ export function PortalHome({ initialData }: { initialData: PortalDataset }) {
               ))}
             </div>
 
-            <div className="mb-10 flex w-full flex-col gap-3">
+            <div className="mb-8 flex w-full flex-col gap-3">
               {featuredLinks.map((link) => (
                 <a
                   key={link.id}
@@ -158,14 +158,6 @@ export function PortalHome({ initialData }: { initialData: PortalDataset }) {
               ))}
             </div>
 
-            <a
-              href="https://github.com/wnnif/personal-hub1.0"
-              target="_blank"
-              rel="noreferrer"
-              className="w-full whitespace-pre-line border-t border-outline-variant/20 pt-8 text-center text-sm text-outline transition hover:text-primary dark:text-outline-variant dark:hover:text-inverse-primary lg:text-left"
-            >
-              {data.profile.footerText}
-            </a>
           </section>
         </aside>
 
@@ -216,10 +208,10 @@ export function PortalHome({ initialData }: { initialData: PortalDataset }) {
             ))}
           </div>
 
-          <div className="masonry">
+          <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
             {visibleLinks.map((item) => (
-              <article key={item.id} className="masonry-item card-container cursor-pointer" onClick={() => window.open(normalizeUrl(item.url), "_blank", "noopener,noreferrer")}>
-                <div className="glass-card group relative rounded-3xl p-6 pt-12 transition duration-300 hover:-translate-y-1.5 hover:shadow-2xl">
+              <article key={item.id} className="card-container h-full cursor-pointer" onClick={() => window.open(normalizeUrl(item.url), "_blank", "noopener,noreferrer")}>
+                <div className="glass-card group relative flex h-full min-h-[178px] flex-col rounded-3xl p-6 pt-12 transition duration-300 hover:-translate-y-1.5 hover:shadow-2xl">
                   <div className="mb-3 flex items-center gap-6">
                     <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/5 text-primary shadow-sm transition group-hover:bg-primary group-hover:text-white dark:bg-white/5 dark:text-inverse-primary">
                       <Icon name={String(item.icon)} className="text-[24px]" />
@@ -242,6 +234,16 @@ export function PortalHome({ initialData }: { initialData: PortalDataset }) {
           </div>
         </section>
       </div>
+
+      <footer className="mx-auto max-w-[1400px] px-5 pb-10 text-center text-sm text-outline dark:text-outline-variant md:px-12">
+        <a
+          href="https://github.com/wnnif/personal-hub"
+          target="_blank"
+          rel="noreferrer"
+          className="block whitespace-pre-line border-t border-outline-variant/20 pt-8 transition hover:text-primary dark:hover:text-inverse-primary"
+          dangerouslySetInnerHTML={{ __html: data.profile.footerText }}
+        />
+      </footer>
     </main>
   );
 }

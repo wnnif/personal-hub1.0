@@ -146,7 +146,7 @@ function LinkFields({ link, categories, onChange }: { link: PortalLink; categori
     <div className="grid gap-4 md:grid-cols-2">
       <Input label="标题" value={link.title} onChange={(title) => onChange({ ...link, title })} />
       <Input label="图标" value={link.icon} onChange={(icon) => onChange({ ...link, icon })} />
-      <Input label="网址" value={link.url} onChange={(url) => onChange({ ...link, url })} className="md:col-span-2" />
+      <UrlInput label="网址" value={link.url} onChange={(url) => onChange({ ...link, url })} className="md:col-span-2" />
       <label className="block">
         <span className="mb-2 block text-sm font-semibold">分类</span>
         <select value={link.categoryId} onChange={(event) => onChange({ ...link, categoryId: event.target.value })} className="w-full rounded-2xl border-0 bg-white/60 px-4 py-3 dark:bg-white/5">
@@ -197,6 +197,46 @@ export function Input({ label, value, onChange, className = "" }: { label: strin
       <input value={value} onChange={(event) => onChange(event.target.value)} className="w-full rounded-2xl border-0 bg-white/60 px-4 py-3 focus:ring-2 focus:ring-primary dark:bg-white/5" />
     </label>
   );
+}
+
+function UrlInput({ label, value, onChange, className = "" }: { label: string; value: string; onChange: (value: string) => void; className?: string }) {
+  const { protocol, address } = splitUrl(value);
+
+  return (
+    <label className={`block ${className}`}>
+      <span className="mb-2 block text-sm font-semibold">{label}</span>
+      <div className="flex overflow-hidden rounded-2xl bg-white/60 focus-within:ring-2 focus-within:ring-primary dark:bg-white/5">
+        <select
+          value={protocol}
+          onChange={(event) => onChange(`${event.target.value}${address}`)}
+          className="w-32 shrink-0 border-0 bg-white/60 px-4 py-3 font-semibold focus:ring-0 dark:bg-slate-900"
+        >
+          <option value="https://">https://</option>
+          <option value="http://">http://</option>
+        </select>
+        <input
+          value={address}
+          onChange={(event) => onChange(`${protocol}${stripProtocol(event.target.value)}`)}
+          placeholder="example.com/path"
+          className="min-w-0 flex-1 border-0 bg-transparent px-4 py-3 focus:ring-0"
+        />
+      </div>
+    </label>
+  );
+}
+
+function splitUrl(value: string) {
+  if (value.startsWith("http://")) {
+    return { protocol: "http://", address: value.slice("http://".length) };
+  }
+  if (value.startsWith("https://")) {
+    return { protocol: "https://", address: value.slice("https://".length) };
+  }
+  return { protocol: "https://", address: stripProtocol(value) };
+}
+
+function stripProtocol(value: string) {
+  return value.replace(/^https?:\/\//i, "");
 }
 
 function slugify(value: string) {

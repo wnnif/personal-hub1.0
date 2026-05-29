@@ -7,9 +7,11 @@ import type { FeaturedLink, Profile, SocialLink } from "@/lib/types";
 import { Input } from "./LinksManager";
 import { Icon } from "@/components/Icon";
 
+type SocialPatch = Partial<Pick<SocialLink, "label" | "icon" | "url" | "isActive">>;
+
 export function ProfileSettings() {
   const [profile, setProfile] = useState<Profile>(defaultDataset.profile);
-  const [socials, setSocials] = useState<SocialLink[]>(defaultDataset.socials);
+  const [socials, setSocials] = useState<SocialLink[]>(defaultDataset.socials.map(normalizeSocialLink));
   const [featuredLinks, setFeaturedLinks] = useState<FeaturedLink[]>(defaultDataset.featuredLinks);
   const [saved, setSaved] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -18,15 +20,20 @@ export function ProfileSettings() {
 
   useEffect(() => {
     loadPortalDataset().then((dataset) => {
+      const normalizedSocials = dataset.socials.map(normalizeSocialLink);
       setProfile(dataset.profile);
-      setSocials(dataset.socials);
-      setFeaturedLinks(dataset.featuredLinks);
+      setSocials(normalizedSocials);
+      setFeaturedLinks(limitActiveFeaturedLinks(syncAllFeaturedFromSocials(dataset.featuredLinks, normalizedSocials)));
     });
   }, []);
 
   async function submit(event: React.FormEvent) {
     event.preventDefault();
-    await persistProfile(profile, socials, featuredLinks);
+    const normalizedSocials = socials.map(normalizeSocialLink);
+    const normalizedFeatured = limitActiveFeaturedLinks(syncAllFeaturedFromSocials(featuredLinks, normalizedSocials));
+    setSocials(normalizedSocials);
+    setFeaturedLinks(normalizedFeatured);
+    await persistProfile(profile, normalizedSocials, normalizedFeatured);
   }
 
   async function persistProfile(nextProfile: Profile, nextSocials: SocialLink[], nextFeaturedLinks: FeaturedLink[]) {
@@ -61,6 +68,26 @@ export function ProfileSettings() {
       setUploading(false);
       event.target.value = "";
     }
+  }
+
+  function addSocial() {
+    setSocials([
+      ...socials,
+      { id: crypto.randomUUID(), label: "GitHub", icon: "github", url: "", sortOrder: socials.length + 1, isActive: true }
+    ]);
+  }
+
+  function updateSocial(index: number, patch: SocialPatch) {
+    const current = socials[index];
+    const nextItem = normalizeSocialLink({ ...current, ...patch });
+    const nextSocials = socials.map((social, currentIndex) => (currentIndex === index ? nextItem : social));
+    setSocials(nextSocials);
+    setFeaturedLinks(limitActiveFeaturedLinks(syncFeaturedFromSocial(featuredLinks, current, nextItem)));
+  }
+
+  function toggleLarge(index: number) {
+    const source = normalizeSocialLink(socials[index]);
+    setFeaturedLinks(toggleFeaturedForSocial(featuredLinks, source));
   }
 
   return (
@@ -105,48 +132,22 @@ export function ProfileSettings() {
       <section className="glass-card rounded-[2rem] p-6">
         <div className="mb-6 flex items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold">小图标按钮</h2>
-            <p className="text-sm text-outline">控制头像下方的小图标矩阵。只有开启显示并填写真实链接时才会出现在前台。</p>
+            <h2 className="text-2xl font-bold">社交按钮</h2>
+            <p className="text-sm text-outline">只管理这一组社交入口；图标自动内置匹配，大按钮最多显示 3 个，避免资料卡溢出。</p>
           </div>
           <button type="button" onClick={addSocial} className="rounded-full bg-primary px-4 py-2 text-sm font-bold text-white">
-            添加小按钮
+            添加社交入口
           </button>
         </div>
-        <div className="space-y-3">
+        <div className="mt-4 space-y-3">
           {socials.map((social, index) => (
-            <div key={social.id} className="grid min-w-0 gap-3 rounded-3xl bg-white/40 p-4 dark:bg-white/5 lg:grid-cols-2 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.4fr)_auto]">
-              <input value={social.label} onChange={(event) => updateSocial(index, { label: event.target.value })} className="min-w-0 rounded-2xl border-0 bg-white/70 px-4 py-3 dark:bg-slate-950" placeholder="名称" />
-              <input value={social.icon} onChange={(event) => updateSocial(index, { icon: event.target.value })} className="min-w-0 rounded-2xl border-0 bg-white/70 px-4 py-3 dark:bg-slate-950" placeholder="图标" />
-              <input value={social.url} onChange={(event) => updateSocial(index, { url: event.target.value })} className="min-w-0 rounded-2xl border-0 bg-white/70 px-4 py-3 dark:bg-slate-950 lg:col-span-2 xl:col-span-1" placeholder="链接地址" />
-              <button type="button" onClick={() => updateSocial(index, { isActive: !social.isActive })} className={`rounded-full px-3 py-2 text-xs font-bold ${social.isActive ? "bg-emerald-500/10 text-emerald-600" : "bg-slate-500/10 text-slate-500"}`}>
-                {social.isActive ? "显示" : "隐藏"}
-              </button>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="glass-card rounded-[2rem] p-6">
-        <div className="mb-6 flex items-center justify-between gap-4">
-          <div>
-            <h2 className="text-2xl font-bold">大按钮卡片</h2>
-            <p className="text-sm text-outline">控制左侧信息卡里的大号联系按钮。它和上面的小图标按钮互不强制同步。</p>
-          </div>
-          <button type="button" onClick={addFeaturedLink} className="rounded-full bg-primary px-4 py-2 text-sm font-bold text-white">
-            添加大按钮
-          </button>
-        </div>
-        <div className="space-y-3">
-          {featuredLinks.map((link, index) => (
-            <div key={link.id} className="grid min-w-0 gap-3 rounded-3xl bg-white/40 p-4 dark:bg-white/5 lg:grid-cols-2 2xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.4fr)_auto]">
-              <input value={link.label} onChange={(event) => updateFeatured(index, { label: event.target.value })} className="min-w-0 rounded-2xl border-0 bg-white/70 px-4 py-3 dark:bg-slate-950" placeholder="名称" />
-              <input value={link.icon} onChange={(event) => updateFeatured(index, { icon: event.target.value })} className="min-w-0 rounded-2xl border-0 bg-white/70 px-4 py-3 dark:bg-slate-950" placeholder="图标" />
-              <input value={link.hint} onChange={(event) => updateFeatured(index, { hint: event.target.value })} className="min-w-0 rounded-2xl border-0 bg-white/70 px-4 py-3 dark:bg-slate-950" placeholder="悬浮提示" />
-              <input value={link.url} onChange={(event) => updateFeatured(index, { url: event.target.value })} className="min-w-0 rounded-2xl border-0 bg-white/70 px-4 py-3 dark:bg-slate-950" placeholder="链接地址" />
-              <button type="button" onClick={() => updateFeatured(index, { isActive: !link.isActive })} className={`rounded-full px-3 py-2 text-xs font-bold ${link.isActive ? "bg-emerald-500/10 text-emerald-600" : "bg-slate-500/10 text-slate-500"}`}>
-                {link.isActive ? "显示" : "隐藏"}
-              </button>
-            </div>
+            <SocialRow
+              key={social.id}
+              item={social}
+              largeVisible={isFeaturedVisibleForSocial(featuredLinks, social)}
+              onChange={(patch) => updateSocial(index, patch)}
+              onToggleLarge={() => toggleLarge(index)}
+            />
           ))}
         </div>
       </section>
@@ -165,20 +166,120 @@ export function ProfileSettings() {
       </div>
     </form>
   );
+}
 
-  function addSocial() {
-    setSocials([...socials, { id: crypto.randomUUID(), label: "新小按钮", icon: "link", url: "", sortOrder: socials.length + 1, isActive: true }]);
+const socialIconRules: Array<{ icon: string; words: string[] }> = [
+  { icon: "github", words: ["github", "git"] },
+  { icon: "telegram", words: ["telegram", "tg", "t.me"] },
+  { icon: "wechat", words: ["wechat", "weixin", "微信"] },
+  { icon: "qq", words: ["qq"] },
+  { icon: "discord", words: ["discord"] },
+  { icon: "x", words: ["twitter", "x.com", "推特"] },
+  { icon: "rss", words: ["blog", "rss", "博客"] },
+  { icon: "phone", words: ["phone", "tel:", "电话", "手机"] },
+  { icon: "mail", words: ["mail", "email", "mailto:", "邮箱"] }
+];
+
+function detectSocialIcon(item: { label: string; url: string; icon?: string }) {
+  const text = `${item.label} ${item.url}`.toLowerCase();
+  return socialIconRules.find((rule) => rule.words.some((word) => text.includes(word.toLowerCase())))?.icon ?? "link";
+}
+
+function normalizeSocialLink<T extends SocialLink>(item: T): T {
+  return { ...item, icon: detectSocialIcon(item) };
+}
+
+function syncFeaturedFromSocial(featured: FeaturedLink[], previous: SocialLink, next: SocialLink) {
+  const matchIndex = featured.findIndex((item) => sameContact(item, previous) || sameContact(item, next));
+  if (matchIndex < 0) return featured;
+  return featured.map((item, index) =>
+    index === matchIndex
+      ? { ...item, label: next.label, icon: next.icon, url: next.url, hint: item.hint || next.label }
+      : item
+  );
+}
+
+function syncAllFeaturedFromSocials(featured: FeaturedLink[], socials: SocialLink[]) {
+  return featured.map((link) => {
+    const social = socials.find((item) => sameContact(item, link));
+    return social ? { ...link, label: social.label, icon: social.icon, url: social.url, hint: link.hint || social.label } : link;
+  });
+}
+
+function limitActiveFeaturedLinks(featured: FeaturedLink[], preferredId?: string) {
+  const activeItems = featured.filter((item) => item.isActive);
+  if (activeItems.length <= 3) return featured;
+
+  const allowedIds = new Set<string>();
+  if (preferredId) allowedIds.add(preferredId);
+  for (const item of featured) {
+    if (!item.isActive || allowedIds.has(item.id)) continue;
+    allowedIds.add(item.id);
+    if (allowedIds.size >= 3) break;
   }
 
-  function addFeaturedLink() {
-    setFeaturedLinks([...featuredLinks, { id: crypto.randomUUID(), label: "新大按钮", icon: "link", hint: "", url: "", sortOrder: featuredLinks.length + 1, isActive: true }]);
-  }
+  return featured.map((item) => (item.isActive && !allowedIds.has(item.id) ? { ...item, isActive: false } : item));
+}
 
-  function updateSocial(index: number, patch: Partial<SocialLink>) {
-    setSocials(socials.map((social, current) => (current === index ? { ...social, ...patch } : social)));
+function toggleFeaturedForSocial(featured: FeaturedLink[], source: SocialLink) {
+  const matchIndex = featured.findIndex((item) => sameContact(item, source));
+  if (matchIndex >= 0) {
+    const next = featured.map((item, index) =>
+      index === matchIndex
+        ? { ...item, label: source.label, icon: source.icon, url: source.url, hint: item.hint || source.label, isActive: !item.isActive }
+        : item
+    );
+    return limitActiveFeaturedLinks(next, next[matchIndex]?.id);
   }
+  const nextItem = { id: crypto.randomUUID(), label: source.label, icon: source.icon, hint: source.label, url: source.url, sortOrder: featured.length + 1, isActive: true };
+  return limitActiveFeaturedLinks([...featured, nextItem], nextItem.id);
+}
 
-  function updateFeatured(index: number, patch: Partial<FeaturedLink>) {
-    setFeaturedLinks(featuredLinks.map((link, current) => (current === index ? { ...link, ...patch } : link)));
-  }
+function isFeaturedVisibleForSocial(featured: FeaturedLink[], source: SocialLink) {
+  return Boolean(featured.find((item) => sameContact(item, source))?.isActive);
+}
+
+function sameContact(left: { label: string; url: string }, right: { label: string; url: string }) {
+  const leftUrl = left.url.trim();
+  const rightUrl = right.url.trim();
+  if (leftUrl && rightUrl && leftUrl === rightUrl) return true;
+  return Boolean(left.label.trim() && right.label.trim() && left.label.trim() === right.label.trim());
+}
+
+function SocialRow({
+  item,
+  largeVisible,
+  onChange,
+  onToggleLarge
+}: {
+  item: SocialLink;
+  largeVisible: boolean;
+  onChange: (patch: SocialPatch) => void;
+  onToggleLarge: () => void;
+}) {
+  const autoIcon = detectSocialIcon(item);
+  return (
+    <div className="grid min-w-0 gap-3 rounded-3xl bg-white/40 p-4 dark:bg-white/5 xl:grid-cols-[minmax(220px,1fr)_minmax(0,1.6fr)_auto]">
+      <div className="grid gap-2 md:grid-cols-2 xl:grid-cols-1">
+        <input value={item.label} onChange={(event) => onChange({ label: event.target.value })} className="min-w-0 rounded-2xl border-0 bg-white/70 px-4 py-3 dark:bg-slate-950" placeholder="名称，例如 GitHub / Telegram / 微信" />
+        <div className="flex items-center gap-2 rounded-2xl bg-white/50 px-4 py-3 text-sm font-semibold text-outline dark:bg-slate-950">
+          <Icon name={autoIcon} className="text-[20px] text-primary dark:text-inverse-primary" />
+          图标内置自动匹配
+        </div>
+      </div>
+
+      <div className="grid gap-2">
+        <input value={item.url} onChange={(event) => onChange({ url: event.target.value })} className="min-w-0 rounded-2xl border-0 bg-white/70 px-4 py-3 dark:bg-slate-950" placeholder="链接地址" />
+      </div>
+
+      <div className="flex flex-wrap items-center gap-2 xl:flex-col xl:items-stretch">
+        <button type="button" onClick={() => onChange({ isActive: !item.isActive })} className={`rounded-full px-3 py-2 text-xs font-bold ${item.isActive ? "bg-emerald-500/10 text-emerald-600" : "bg-slate-500/10 text-slate-500"}`}>
+          小图标{item.isActive ? "显示" : "关闭"}
+        </button>
+        <button type="button" onClick={onToggleLarge} className={`rounded-full px-3 py-2 text-xs font-bold ${largeVisible ? "bg-emerald-500/10 text-emerald-600" : "bg-slate-500/10 text-slate-500"}`}>
+          大按钮{largeVisible ? "显示" : "关闭"}
+        </button>
+      </div>
+    </div>
+  );
 }
