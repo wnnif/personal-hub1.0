@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-REPO_URL="${REPO_URL:-https://github.com/wnnif/personal-hub1.0.git}"
-INSTALL_DIR="${INSTALL_DIR:-/opt/personal-hub1.0}"
+REPO_URL="${REPO_URL:-https://github.com/wnnif/personal-hub.git}"
+INSTALL_DIR="${INSTALL_DIR:-/opt/personal-hub}"
 APP_PORT="${APP_PORT:-3000}"
 ADMIN_EMAIL="${ADMIN_EMAIL:-admin}"
 ADMIN_PASSWORD="${ADMIN_PASSWORD:-124}"
@@ -21,7 +21,10 @@ install_packages() {
   if command -v apt-get >/dev/null 2>&1; then
     export DEBIAN_FRONTEND=noninteractive
     apt-get update
-    apt-get install -y git curl ca-certificates openssl docker.io docker-compose-plugin
+    apt-get install -y git curl ca-certificates openssl docker.io
+    if ! apt-get install -y docker-compose-plugin; then
+      apt-get install -y docker-compose
+    fi
   elif command -v dnf >/dev/null 2>&1; then
     dnf install -y git curl ca-certificates openssl docker docker-compose-plugin
     systemctl enable --now docker
@@ -37,7 +40,7 @@ install_packages() {
 
 ensure_compose() {
   command -v docker >/dev/null 2>&1 || fail "docker 未安装成功"
-  docker compose version >/dev/null 2>&1 || fail "docker compose plugin 未安装成功"
+  docker compose version >/dev/null 2>&1 || fail "docker compose 未安装成功"
 }
 
 make_env() {

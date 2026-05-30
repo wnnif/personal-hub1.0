@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-INSTALL_DIR="${INSTALL_DIR:-/opt/personal-hub1.0}"
+INSTALL_DIR="${INSTALL_DIR:-/opt/personal-hub}"
 BRANCH="${BRANCH:-main}"
 
 log() { printf '\033[1;32m[personal-hub]\033[0m %s\n' "$*"; }
@@ -17,7 +17,7 @@ main() {
   require_root
   [ -d "$INSTALL_DIR/.git" ] || fail "未找到仓库：$INSTALL_DIR。可用 INSTALL_DIR=/你的路径 指定。"
   command -v docker >/dev/null 2>&1 || fail "docker 未安装"
-  docker compose version >/dev/null 2>&1 || fail "docker compose plugin 未安装"
+  docker compose version >/dev/null 2>&1 || fail "docker compose 未安装"
 
   cd "$INSTALL_DIR"
   [ -f .env ] || fail "缺少 .env，请先执行一键安装或手动创建。"

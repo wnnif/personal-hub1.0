@@ -9,25 +9,25 @@
 全新服务器一键安装：
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/wnnif/personal-hub1.0/main/scripts/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/wnnif/personal-hub/main/scripts/install.sh | bash
 ```
 
 自定义安装目录、端口和初始后台密码：
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/wnnif/personal-hub1.0/main/scripts/install.sh | INSTALL_DIR=/opt/personal-hub APP_PORT=3017 ADMIN_PASSWORD='你的密码' bash
+curl -fsSL https://raw.githubusercontent.com/wnnif/personal-hub/main/scripts/install.sh | INSTALL_DIR=/opt/personal-hub APP_PORT=3017 ADMIN_PASSWORD='你的密码' bash
 ```
 
 后续一键更新：
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/wnnif/personal-hub1.0/main/scripts/update.sh | bash
+curl -fsSL https://raw.githubusercontent.com/wnnif/personal-hub/main/scripts/update.sh | bash
 ```
 
 如果安装目录不是默认值：
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/wnnif/personal-hub1.0/main/scripts/update.sh | INSTALL_DIR=/opt/personal-hub bash
+curl -fsSL https://raw.githubusercontent.com/wnnif/personal-hub/main/scripts/update.sh | INSTALL_DIR=/opt/personal-hub bash
 ```
 
 ## 2. 准备环境变量

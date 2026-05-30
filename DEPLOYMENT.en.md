@@ -9,25 +9,25 @@ This project is designed for Docker-first deployment. The recommended production
 Install on a fresh server:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/wnnif/personal-hub1.0/main/scripts/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/wnnif/personal-hub/main/scripts/install.sh | bash
 ```
 
 Customize the install path and initial admin password:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/wnnif/personal-hub1.0/main/scripts/install.sh | INSTALL_DIR=/opt/personal-hub APP_PORT=3017 ADMIN_PASSWORD='your-password' bash
+curl -fsSL https://raw.githubusercontent.com/wnnif/personal-hub/main/scripts/install.sh | INSTALL_DIR=/opt/personal-hub APP_PORT=3017 ADMIN_PASSWORD='your-password' bash
 ```
 
 Update later:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/wnnif/personal-hub1.0/main/scripts/update.sh | bash
+curl -fsSL https://raw.githubusercontent.com/wnnif/personal-hub/main/scripts/update.sh | bash
 ```
 
 If you used a custom install path:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/wnnif/personal-hub1.0/main/scripts/update.sh | INSTALL_DIR=/opt/personal-hub bash
+curl -fsSL https://raw.githubusercontent.com/wnnif/personal-hub/main/scripts/update.sh | INSTALL_DIR=/opt/personal-hub bash
 ```
 
 ## 2. Prepare Environment
